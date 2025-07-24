@@ -5,8 +5,8 @@ print("Текущая рабочая директория:", os.getcwd())
 print("Файлы в директории:", os.listdir())
 
 
-input_file = "EGM2008.cof.txt"         # Входной файл (исходник EGM2008)
-output_file = "egm2008_clean.dat"  # Выходной файл (очищенный)
+input_file = "egm2008.dat"         # Входной файл (исходник EGM2008)
+output_file = "111111egm2008_clean.dat"  # Выходной файл (очищенный)
 
 with open(input_file, "r") as infile, open(output_file, "w") as outfile:
     for line in infile:

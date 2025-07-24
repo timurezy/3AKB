@@ -60,7 +60,7 @@ namespace Astrometric {
 
 std::map<int, std::string> gravityModels = {
 	{1, "EGM96.dat"},
-	{2, "EGM08.dat"}
+	{2, "egm2008.dat"}
 };
 
 int selectedModel = 1; 

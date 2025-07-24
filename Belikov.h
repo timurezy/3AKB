@@ -65,10 +65,11 @@ using namespace Astrometric;
         while (std::getline(file, line)) {
             if (line.empty() || line[0] == '#') continue;
             std::istringstream iss(line);
-            std::string tag;
+           //std::string tag;
             int n, m;
             double C, S;
-            iss >> tag >> n >> m >> C >> S;
+           //iss >> tag >> n >> m >> C >> S;
+            iss >> n >> m >> C >> S;
             if (n > nmax || m > n) continue;
 
             double norm = PfBel(n, m);

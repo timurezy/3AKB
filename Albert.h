@@ -217,7 +217,7 @@ void import(const std::string& FilePath, size_t Order, size_t Degree) {
             if (n <= Order && m <= Degree) {
                 _c[n][m] = c;
                 _s[n][m] = s;
-            
+            }
         }
     }
 

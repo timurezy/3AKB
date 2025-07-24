@@ -133,18 +133,37 @@ int main() {
             break;
         }
         case 5: {
-            std::cout << "ENTER NEW NMAX (1 TO 360): ";
-            int new_nmax;
-            std::cin >> new_nmax;
-            if (std::cin.fail() || new_nmax < 1 || new_nmax > 360) {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "INVALID INPUT. HARMONICS NOT CHANGED.\n";
+            if (selectedModel == 1) {
+                std::cout << "ENTER NEW NMAX (1 TO 360): ";
             }
             else {
-                nmax = new_nmax;
-                mmax = new_nmax;
-                std::cout << "HARMONICS UPDATED.\n";
+                std::cout << "ENTER NEW NMAX (1 TO 2000): ";
+            }
+            int new_nmax;
+            std::cin >> new_nmax;
+            if (selectedModel == 1) {
+                if (std::cin.fail() || new_nmax < 1 || new_nmax > 360) {
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "INVALID INPUT. HARMONICS NOT CHANGED.\n";
+                }
+                else {
+                    nmax = new_nmax;
+                    mmax = new_nmax;
+                    std::cout << "HARMONICS UPDATED.\n";
+                }
+            }
+            else {
+                if (std::cin.fail() || new_nmax < 1 || new_nmax > 2000) {
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "INVALID INPUT. HARMONICS NOT CHANGED.\n";
+                }
+                else {
+                    nmax = new_nmax;
+                    mmax = new_nmax;
+                    std::cout << "HARMONICS UPDATED.\n";
+                }
             }
             break;
         }
