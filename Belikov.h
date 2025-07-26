@@ -8,7 +8,7 @@
 #include <iostream>
 
 
-using namespace Astrometric;
+
 
 
 
@@ -83,7 +83,7 @@ using namespace Astrometric;
     }
 
  
-   void Astrometric::gravityBelikov(double r, double lat, double lon, int n, std::array<double, 3>& Result)
+   void gravityBelikov(double r, double lat, double lon, int n, std::array<double, 3>& Result)
   {
        
        double lat_rad = lat * M_PI / 180.0;  

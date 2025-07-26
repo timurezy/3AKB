@@ -69,7 +69,8 @@
 
 		m = (int*)calloc((n + 1), sizeof(int));
 		if (!m) {
-			Text::error("fatal: out of memory (m).\n");
+			
+			std::cout << "fatal: out of memory (m).\n";
 			exit(EXIT_FAILURE);
 		}
 
@@ -145,7 +146,8 @@
 		Pn_1 = (double*)calloc(Model_Size, sizeof(double));
 		Pn_2 = (double*)calloc(Model_Size, sizeof(double));
 		if (!V || !W || !CC || !SS || !P || !Pn_1 || !Pn_2) {
-			Text::error("fatal: out of memory (Acc_Field).\n");
+		
+			std::cout << "fatal: out of memory (Acc_Field).\n";
 			exit(EXIT_FAILURE);
 		}
 
@@ -314,7 +316,7 @@
 	inline void importStokesCunningham(const std::string& filename, int nmax) {
 		std::ifstream file(filename);
 		if (!file) {
-			Text::error("Error opening EGM96.dat file.");
+			std::cout << "Error opening EGM96.dat file.";
 			return;
 		}
 
@@ -327,7 +329,7 @@
 		}
 	}
 	
-	void Astrometric::gravityCunningham(double r, double lat, double lon, int n, std::array<double, 3>& Result)
+	void gravityCunningham(double r, double lat, double lon, int n, std::array<double, 3>& Result)
 	{
 		
 		double phi = lat;    
@@ -339,7 +341,7 @@
 
 		rdotdot = (double*)calloc(6, sizeof(double));
 		if (!rdotdot) {
-			Text::error("fatal: out of memory (rdotdot).\n");
+			std::cout << "fatal: out of memory (rdotdot).\n";
 			exit(EXIT_FAILURE);
 		};
 
@@ -347,7 +349,7 @@
 
 	 Acc_Field(EARTH_MU, EARTH_RADIUS, r, phi, lambda, Cnm1, Snm1, n + 2, rdotdot); 
 
-		Position  AT = Position(rdotdot[0], rdotdot[1], rdotdot[2]);
+	
 		
 
 		Result[0] = rdotdot[0];

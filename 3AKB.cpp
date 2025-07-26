@@ -77,7 +77,7 @@ int main() {
             break;
         }
         case 2: {
-            using namespace Astrometric;
+         
 
             std::array<double, 3> Result{};
             importStokesBelikov(gravityModels[selectedModel], nmax);
@@ -95,7 +95,7 @@ int main() {
             break;
         }
         case 3: {
-            using namespace Astrometric;
+            
 
             std::array<double, 3> Result{};
             importStokesCunningham(gravityModels[selectedModel], nmax);
