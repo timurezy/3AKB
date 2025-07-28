@@ -5,8 +5,6 @@
 #include <iostream>
 #include <chrono>
 
-
-
 int main() {
     int nmax = 16;
     int mmax = 16;
@@ -18,13 +16,13 @@ int main() {
 
         std::string GravityModelName;
         if (selectedModel == 1) {
-            
+
             GravityModelName = "EGM96";
         }
         else { GravityModelName = "EGM2008"; }
-      
+
         std::cout << "\nCURRENT SETTINGS:\n"
-            
+
             << "- GRAVITY MODEL " << GravityModelName << "\n"
             << "- HARMONICS: " << nmax << "\n"
             << "- COORDINATES: RADIUS = " << radius << " M, LATITUDE = " << latitude << ", LONGITUDE = " << longitude << "\n\n";
@@ -44,8 +42,8 @@ int main() {
         std::cin >> option;
 
         if (std::cin.fail()) {
-            std::cin.clear(); 
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "INVALID INPUT. TRY AGAIN.\n";
             continue;
         }
@@ -67,49 +65,47 @@ int main() {
             auto start = std::chrono::high_resolution_clock::now();
             GravityStokes.get_acceleration(radius, latitude, longitude, Result);
             auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double>(end - start).count();
+            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  // ✅ изменено
 
             std::cout
                 << "AX = " << Result[0] << std::endl
                 << "AY = " << Result[1] << std::endl
                 << "AZ = " << Result[2] << std::endl
-                << "TIME: " << total_time << " SEC\n";
+                << "TIME: " << total_time << " MS\n";  // ✅ изменено
             break;
         }
         case 2: {
-         
 
             std::array<double, 3> Result{};
             importStokesBelikov(gravityModels[selectedModel], nmax);
 
             auto start = std::chrono::high_resolution_clock::now();
-            gravityBelikov( radius, latitude, longitude , nmax, Result);
+            gravityBelikov(radius, latitude, longitude, nmax, Result);
             auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double>(end - start).count();
+            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  // ✅ изменено
 
             std::cout
                 << "AX = " << Result[0] << "\n"
                 << "AY = " << Result[1] << "\n"
                 << "AZ = " << Result[2] << "\n"
-                << "TIME: " << total_time << " SEC\n";
+                << "TIME: " << total_time << " MS\n";  // ✅ изменено
             break;
         }
         case 3: {
-            
 
             std::array<double, 3> Result{};
             importStokesCunningham(gravityModels[selectedModel], nmax);
 
             auto start = std::chrono::high_resolution_clock::now();
-            gravityCunningham(radius, latitude, longitude , nmax, Result);
+            gravityCunningham(radius, latitude, longitude, nmax, Result);
             auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double>(end - start).count();
+            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  // ✅ изменено
 
             std::cout
                 << "AX = " << Result[0] << "\n"
                 << "AY = " << Result[1] << "\n"
                 << "AZ = " << Result[2] << "\n"
-                << "TIME: " << total_time << " SEC\n";
+                << "TIME: " << total_time << " MS\n";  // ✅ изменено
             break;
         }
         case 4: {
@@ -123,13 +119,13 @@ int main() {
             auto start = std::chrono::high_resolution_clock::now();
             GravityStokes.get_acceleration(radius, latitude, longitude, Result);
             auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double>(end - start).count();
+            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  // ✅ изменено
 
             std::cout
                 << "AX = " << Result[0] << std::endl
                 << "AY = " << Result[1] << std::endl
                 << "AZ = " << Result[2] << std::endl
-                << "TIME: " << total_time << " SEC\n";
+                << "TIME: " << total_time << " MS\n";  // ✅ изменено
             break;
         }
         case 5: {
@@ -180,7 +176,7 @@ int main() {
             double lon;
             std::cin >> lon;
 
-            if (std::cin.fail()  || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+            if (std::cin.fail() || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "INVALID INPUT. COORDINATES NOT CHANGED.\n";
@@ -205,6 +201,7 @@ int main() {
 
     return 0;
 }
+
 
 
 

@@ -186,6 +186,7 @@ namespace uniorb {
 
 
 
+
 void import(const std::string& FilePath, size_t Order, size_t Degree) {
     std::cout << "INFO  | Start reading gravity_stokes data from file " << FilePath << std::endl;
 
@@ -214,7 +215,8 @@ void import(const std::string& FilePath, size_t Order, size_t Degree) {
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         if (iss >> n >> m >> c >> s) {
-            if (n <= Order && m <= Degree) {
+            if (n > Order) break;             
+            if (m <= Degree) {
                 _c[n][m] = c;
                 _s[n][m] = s;
             }
@@ -240,6 +242,10 @@ void import(const std::string& FilePath, size_t Order, size_t Degree) {
     private:
         void get_acceleration_one_thread(double R, double Lat, double Long, std::array<double, 3>& A) const {
             // Support values
+            Lat = Lat * M_PI / 180.0;     
+            Long = Long * M_PI / 180.0;  
+
+
             double t = std::cos(PI1_2 - Lat);
             double u = std::sin(PI1_2 - Lat);
 
@@ -295,6 +301,11 @@ void import(const std::string& FilePath, size_t Order, size_t Degree) {
 
         void get_acceleration_multithread(double R, double Lat, double Long, std::array<double, 3>& A) const {
             // Support values
+            Lat = Lat * M_PI / 180.0;     
+            Long = Long * M_PI / 180.0;   
+
+
+
             double t = std::cos(PI1_2 - Lat);
             double u = std::sin(PI1_2 - Lat);
 

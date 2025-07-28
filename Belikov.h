@@ -65,10 +65,10 @@
         while (std::getline(file, line)) {
             if (line.empty() || line[0] == '#') continue;
             std::istringstream iss(line);
-           //std::string tag;
+    
             int n, m;
             double C, S;
-           //iss >> tag >> n >> m >> C >> S;
+           
             iss >> n >> m >> C >> S;
             if (n > nmax || m > n) continue;
 
@@ -97,7 +97,8 @@
 
         
         int size = n + 1;
-        double mu = EARTH_MU ;
+        //double mu = EARTH_MU ;
+        double mu = EARTH_MU / r;
 
         double Vr = 0., Vt = 0., Vtl = 0.;
         double** P = new double* [size];
@@ -144,8 +145,9 @@
        
         
         
-        double ax = Vr * u * cosl + Vt * t * cosl / r - Vtl * sinl / (r * u);
-        double ay = Vr * u * sinl + Vt * t * sinl / r + Vtl * cosl / (r * u);
+       
+        double ax = Vr * u * cosl + Vt * t * cosl / r - Vtl * sinl / r;
+        double ay = Vr * u * sinl + Vt * t * sinl / r + Vtl * cosl / r;
         double az = Vr * t - Vt * u / r;
 
 

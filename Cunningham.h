@@ -332,8 +332,10 @@
 	void gravityCunningham(double r, double lat, double lon, int n, std::array<double, 3>& Result)
 	{
 		
-		double phi = lat;    
-		double lambda = lon;  
+		//double phi = lat;    
+		//double lambda = lon;  
+		double phi = lat * M_PI / 180.0;    
+		double lambda = lon * M_PI / 180.0;  
 
 
 		double* rdotdot;
