@@ -83,7 +83,7 @@
     }
 
  
-   void gravityBelikov(double r, double lat, double lon, int n, std::array<double, 3>& Result)
+   void gravityBelikov(double r, double lat, double lon, int nmax, std::array<double, 3>& Result)
   {
        
        double lat_rad = lat * M_PI / 180.0;  
@@ -96,8 +96,7 @@
      double u = std::sin(theta);                  
 
         
-        int size = n + 1;
-        //double mu = EARTH_MU ;
+        int size = nmax + 1;
         double mu = EARTH_MU / r;
 
         double Vr = 0., Vt = 0., Vtl = 0.;

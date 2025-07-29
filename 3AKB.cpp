@@ -65,13 +65,13 @@ int main() {
             auto start = std::chrono::high_resolution_clock::now();
             GravityStokes.get_acceleration(radius, latitude, longitude, Result);
             auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  // ✅ изменено
+            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  
 
             std::cout
                 << "AX = " << Result[0] << std::endl
                 << "AY = " << Result[1] << std::endl
                 << "AZ = " << Result[2] << std::endl
-                << "TIME: " << total_time << " MS\n";  // ✅ изменено
+                << "TIME: " << total_time << " MS\n";  
             break;
         }
         case 2: {
@@ -82,13 +82,13 @@ int main() {
             auto start = std::chrono::high_resolution_clock::now();
             gravityBelikov(radius, latitude, longitude, nmax, Result);
             auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  // ✅ изменено
+            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  
 
             std::cout
                 << "AX = " << Result[0] << "\n"
                 << "AY = " << Result[1] << "\n"
                 << "AZ = " << Result[2] << "\n"
-                << "TIME: " << total_time << " MS\n";  // ✅ изменено
+                << "TIME: " << total_time << " MS\n";  
             break;
         }
         case 3: {
@@ -99,13 +99,13 @@ int main() {
             auto start = std::chrono::high_resolution_clock::now();
             gravityCunningham(radius, latitude, longitude, nmax, Result);
             auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  // ✅ изменено
+            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  
 
             std::cout
                 << "AX = " << Result[0] << "\n"
                 << "AY = " << Result[1] << "\n"
                 << "AZ = " << Result[2] << "\n"
-                << "TIME: " << total_time << " MS\n";  // ✅ изменено
+                << "TIME: " << total_time << " MS\n";  
             break;
         }
         case 4: {
@@ -119,13 +119,13 @@ int main() {
             auto start = std::chrono::high_resolution_clock::now();
             GravityStokes.get_acceleration(radius, latitude, longitude, Result);
             auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  // ✅ изменено
+            double total_time = std::chrono::duration<double, std::milli>(end - start).count();  
 
             std::cout
                 << "AX = " << Result[0] << std::endl
                 << "AY = " << Result[1] << std::endl
                 << "AZ = " << Result[2] << std::endl
-                << "TIME: " << total_time << " MS\n";  // ✅ изменено
+                << "TIME: " << total_time << " MS\n";  
             break;
         }
         case 5: {
