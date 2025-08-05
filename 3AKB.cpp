@@ -136,6 +136,8 @@ int main() {
             break;
         }
         case 5: {
+            freeStokes(nmax);
+            importedharmonics = 0;
             if (selectedModel == 1) {
                 std::cout << "ENTER NEW NMAX (1 TO 360): ";
             }
