@@ -5,9 +5,13 @@
 #include <iostream>
 #include <chrono>
 
+
+
 int main() {
-    int nmax = 16;
-    int mmax = 16;
+    int importflag = 0;
+    int importedharmonics = 0;
+    int nmax = 0;
+    int mmax = 0;
     double radius = 6370000;
     double latitude = 0.0;
     double longitude = 0.0;
@@ -25,8 +29,9 @@ int main() {
 
             << "- GRAVITY MODEL " << GravityModelName << "\n"
             << "- HARMONICS: " << nmax << "\n"
-            << "- COORDINATES: RADIUS = " << radius << " M, LATITUDE = " << latitude << ", LONGITUDE = " << longitude << "\n\n";
-
+            << "- COORDINATES: RADIUS = " << radius << " M, LATITUDE = " << latitude << ", LONGITUDE = " << longitude << "\n"
+            << "- DOWNLOADED HARMONICS: " << importedharmonics << "\n\n";
+        
         std::cout << "SELECT METHOD:\n"
             << "1. HOLMES 1T\n"
             << "2. BELIKOV\n"
@@ -35,6 +40,7 @@ int main() {
             << "5. CHANGE MAX HARMONICS\n"
             << "6. CHANGE INPUT COORDINATES\n"
             << "7. SELECT GRAVITY MODEL\n"
+            << "8. IMPORT HARMONICS\n"
             << "0. EXIT\n"
             << "ENTER CHOICE: ";
 
@@ -47,11 +53,12 @@ int main() {
             std::cout << "INVALID INPUT. TRY AGAIN.\n";
             continue;
         }
-
         if (option == 0) {
+            freeStokes(nmax); 
             std::cout << "EXIT.\n";
             break;
         }
+
 
         switch (option) {
         case 1: {
@@ -77,7 +84,7 @@ int main() {
         case 2: {
 
             std::array<double, 3> Result{};
-            importStokesBelikov(gravityModels[selectedModel], nmax);
+            //importStokesBelikov(gravityModels[selectedModel], nmax);
 
             auto start = std::chrono::high_resolution_clock::now();
             gravityBelikov(radius, latitude, longitude, nmax, Result);
@@ -94,7 +101,7 @@ int main() {
         case 3: {
 
             std::array<double, 3> Result{};
-            importStokesCunningham(gravityModels[selectedModel], nmax);
+            //importStokesCunningham(gravityModels[selectedModel], nmax);
 
             auto start = std::chrono::high_resolution_clock::now();
             gravityCunningham(radius, latitude, longitude, nmax, Result);
@@ -190,9 +197,20 @@ int main() {
             break;
         }
         case 7: {
+            freeStokes(nmax);
             selectGravityModel(selectedModel, gravityModels);
+            importedharmonics = 0;
             break;
         }
+        case 8: {
+            freeStokes(nmax);
+            importStokesCombined(gravityModels[selectedModel], nmax);
+            std::cout << "COMBINED STOKES COEFFICIENTS IMPORTED.\n";
+            importflag = 1;
+            importedharmonics = nmax;
+            break;
+        }
+
         default:
             std::cout << "INVALID OPTION. TRY AGAIN.\n";
             break;

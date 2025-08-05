@@ -195,7 +195,7 @@ void import(const std::string& FilePath, size_t Order, size_t Degree) {
     _order = Order;
     _degree = Degree;
 
-    // Инициализация векторов для коэффициентов
+    
     _c = std::vector<std::vector<double>>(Order + 1);
     _s = std::vector<std::vector<double>>(Order + 1);
     for (size_t n = 0; n <= Order; ++n) {

@@ -13,9 +13,9 @@
 
 
     
-    double* Cnm = nullptr;
-    double* Snm = nullptr;
-    int** Order2 = nullptr;
+    //double* Cnm = nullptr;
+    //double* Snm = nullptr;
+    /*int** Order2 = nullptr;
 
    double PfBel(double n, double m) {
         if (m == 0) return std::sqrt(2. * n + 1);
@@ -42,7 +42,8 @@
                 Order2[i][j] = order2(i, j);
         }
     }
-
+*/
+  /*
   void importStokesBelikov(const std::string& path, int nmax) {
         unsigned int Coff_Dim = (nmax + 2) * (nmax + 1) / 2;
         Cnm = (double*)calloc(Coff_Dim, sizeof(double));
@@ -81,8 +82,9 @@
 
         setOrder2(nmax);
     }
-
+    */
  
+
    void gravityBelikov(double r, double lat, double lon, int nmax, std::array<double, 3>& Result)
   {
        
