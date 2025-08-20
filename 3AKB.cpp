@@ -8,13 +8,13 @@
 
 
 int main() {
-    int importflag = 0;
     int importedharmonics = 0;
     int nmax = 0;
     int mmax = 0;
     double radius = 6370000;
     double latitude = 0.0;
     double longitude = 0.0;
+    int threads = 4;
 
     while (true) {
 
@@ -30,7 +30,8 @@ int main() {
             << "- GRAVITY MODEL " << GravityModelName << "\n"
             << "- HARMONICS: " << nmax << "\n"
             << "- COORDINATES: RADIUS = " << radius << " M, LATITUDE = " << latitude << ", LONGITUDE = " << longitude << "\n"
-            << "- DOWNLOADED HARMONICS: " << importedharmonics << "\n\n";
+            << "- DOWNLOADED HARMONICS: " << importedharmonics << "\n\n"
+            << "- THREADS = " << threads << "\n";
         
         std::cout << "SELECT METHOD:\n"
             << "1. HOLMES 1T\n"
@@ -41,6 +42,7 @@ int main() {
             << "6. CHANGE INPUT COORDINATES\n"
             << "7. SELECT GRAVITY MODEL\n"
             << "8. IMPORT HARMONICS\n"
+            << "9. NUMBER OF THREADS\n"
             << "0. EXIT\n"
             << "ENTER CHOICE: ";
 
@@ -84,8 +86,12 @@ int main() {
         case 2: {
 
             std::array<double, 3> Result{};
-            //importStokesBelikov(gravityModels[selectedModel], nmax);
-
+            if (importflag == 0) {
+                importStokesCombined(gravityModels[selectedModel], nmax);
+                std::cout << "COMBINED STOKES COEFFICIENTS IMPORTED.\n";
+                importedharmonics = nmax;
+            }
+            else continue;
             auto start = std::chrono::high_resolution_clock::now();
             gravityBelikov(radius, latitude, longitude, nmax, Result);
             auto end = std::chrono::high_resolution_clock::now();
@@ -101,8 +107,11 @@ int main() {
         case 3: {
 
             std::array<double, 3> Result{};
-            //importStokesCunningham(gravityModels[selectedModel], nmax);
-
+            if (importflag == 0) {
+                importStokesCombined(gravityModels[selectedModel], nmax);
+                std::cout << "COMBINED STOKES COEFFICIENTS IMPORTED.\n";
+                importedharmonics = nmax;
+            }
             auto start = std::chrono::high_resolution_clock::now();
             gravityCunningham(radius, latitude, longitude, nmax, Result);
             auto end = std::chrono::high_resolution_clock::now();
@@ -116,12 +125,13 @@ int main() {
             break;
         }
         case 4: {
+          
             using namespace uniorb;
 
             auto Result = std::array<double, 3>();
             auto GravityStokes = gravity_stokes();
             GravityStokes.import(gravityModels[selectedModel], nmax, mmax);
-            GravityStokes.use_concurrency(4);
+            GravityStokes.use_concurrency(threads);
 
             auto start = std::chrono::high_resolution_clock::now();
             GravityStokes.get_acceleration(radius, latitude, longitude, Result);
@@ -208,9 +218,12 @@ int main() {
             freeStokes(nmax);
             importStokesCombined(gravityModels[selectedModel], nmax);
             std::cout << "COMBINED STOKES COEFFICIENTS IMPORTED.\n";
-            importflag = 1;
             importedharmonics = nmax;
             break;
+        }
+        case 9: {
+            std::cout << "NUMBER OF THREADS?" << "\n";
+            std::cin >> threads;
         }
 
         default:

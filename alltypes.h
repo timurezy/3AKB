@@ -51,7 +51,7 @@ double* Snm = nullptr;
 double* Cnm1 = nullptr;
 double* Snm1 = nullptr;
 int** Order2 = nullptr;
-
+int importflag = 0;
 
 
 
@@ -134,6 +134,7 @@ void importStokesCombined(const std::string& path, int nmax) {
         Cnm1[idx] = C;
         Snm1[idx] = S;
     }
+    importflag = 1;
 }
 
 
