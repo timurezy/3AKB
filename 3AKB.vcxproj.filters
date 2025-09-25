@@ -32,6 +32,9 @@
     <ClInclude Include="alltypes.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="Simulate.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Desktop\Практика\EGM96.dat">

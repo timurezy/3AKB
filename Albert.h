@@ -35,7 +35,7 @@ namespace uniorb {
             use_concurrency(1);
         }
 
-        gravity_stokes(std::vector<std::vector<double>>&& C, std::vector<std::vector<double>>&& S, size_t Order, size_t Degree, double GM, double Radius) :
+        gravity_stokes(std::vector<std::vector<double>>& C, std::vector<std::vector<double>>& S, size_t Order, size_t Degree, double GM, double Radius) :
             _c(C),
             _s(S),
             _order(Order),
@@ -185,7 +185,7 @@ namespace uniorb {
 */
 
 
-
+/*
 
 void import(const std::string& FilePath, size_t Order, size_t Degree) {
     std::cout << "INFO  | Start reading gravity_stokes data from file " << FilePath << std::endl;
@@ -226,7 +226,7 @@ void import(const std::string& FilePath, size_t Order, size_t Degree) {
     std::cout << "INFO  | Gravity field loaded successfully from file " << FilePath << std::endl;
 }
 
-
+*/
 
 
     protected:

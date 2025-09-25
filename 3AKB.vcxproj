@@ -130,6 +130,7 @@
     <ClInclude Include="alltypes.h" />
     <ClInclude Include="Belikov.h" />
     <ClInclude Include="Cunningham.h" />
+    <ClInclude Include="Simulate.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Desktop\Практика\EGM96.dat" />

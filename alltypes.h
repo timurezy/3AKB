@@ -51,6 +51,8 @@ double* Snm = nullptr;
 double* Cnm1 = nullptr;
 double* Snm1 = nullptr;
 int** Order2 = nullptr;
+std::vector<std::vector<double>> _c;
+std::vector<std::vector<double>> _s;
 int importflag = 0;
 
 
@@ -83,13 +85,9 @@ void setOrder2(int nmax) {
 
 
 
-
-
-
 void importStokesCombined(const std::string& path, int nmax) {
-  
+    
     unsigned int Coff_Dim = (nmax + 2) * (nmax + 1) / 2;
-
 
     Cnm = (double*)calloc(Coff_Dim, sizeof(double));
     Snm = (double*)calloc(Coff_Dim, sizeof(double));
@@ -109,6 +107,15 @@ void importStokesCombined(const std::string& path, int nmax) {
         exit(EXIT_FAILURE);
     }
 
+    
+    _c = std::vector<std::vector<double>>(nmax + 1);
+    _s = std::vector<std::vector<double>>(nmax + 1);
+    for (int n = 0; n <= nmax; ++n) {
+        _c[n] = std::vector<double>(n + 1, 0.0);
+        _s[n] = std::vector<double>(n + 1, 0.0);
+    }
+
+    
     std::string line;
     while (std::getline(file, line)) {
         if (line.empty() || line[0] == '#') continue;
@@ -116,25 +123,27 @@ void importStokesCombined(const std::string& path, int nmax) {
         std::istringstream iss(line);
         int n, m;
         double C, S;
-
-   
         iss >> n >> m >> C >> S;
         if (iss.fail()) continue;
-
         if (n > nmax || m > n) continue;
 
         int idx = order2(n, m);
         double norm = PfBel(n, m);
 
-      
+        // Запись в Belikov Cunningham
         Cnm[idx] = C * norm;
         Snm[idx] = S * norm;
-
-       
         Cnm1[idx] = C;
         Snm1[idx] = S;
+     
+        // Запись в _c/_s (gravity_stokes)
+        if (m <= n) {
+            _c[n][m] = C;
+            _s[n][m] = S;
+        }
     }
     importflag = 1;
+    std::cout << "INFO  | Gravity field loaded successfully into both formats.\n";
 }
 
 
