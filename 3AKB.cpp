@@ -391,7 +391,7 @@ int main() {
 
 
 
-                    double deltat = 10;
+                    double deltat = 0.001;
 
                     for (int i = 0; i < num_runs; i++) {
 
