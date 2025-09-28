@@ -299,6 +299,7 @@ int main() {
                         std::array<double, 3> ResultBelikov{};
                         auto startB = std::chrono::high_resolution_clock::now();
                         gravityBelikov(radius, latitude, longitude, nmax, ResultBelikov);
+                        simulate_integrator_and_sofa(27);
                         auto endB = std::chrono::high_resolution_clock::now();
                         double timeB = std::chrono::duration<double, std::milli>(endB - startB).count();
 
@@ -311,6 +312,7 @@ int main() {
                         std::array<double, 3> ResultCunningham{};
                         auto startC = std::chrono::high_resolution_clock::now();
                         gravityCunningham(radius, latitude, longitude, nmax, ResultCunningham);
+                        simulate_integrator_and_sofa(27);
                         auto endC = std::chrono::high_resolution_clock::now();
                         double timeC = std::chrono::duration<double, std::milli>(endC - startC).count();
 
@@ -327,6 +329,7 @@ int main() {
 
                         auto startS = std::chrono::high_resolution_clock::now();
                         GravityStokes.get_acceleration(radius, latitude, longitude, ResultStokesONE);
+                        simulate_integrator_and_sofa(27);
                         auto endS = std::chrono::high_resolution_clock::now();
                         double timeS = std::chrono::duration<double, std::milli>(endS - startS).count();
 
@@ -335,12 +338,15 @@ int main() {
                             << " AZ=" << ResultStokesONE[2]
                             << " TIME=" << timeS << " ms\n";
 
+                        // === Stokes (Holmes multi-thread) ===
+
                         std::array<double, 3> ResultStokesMULTI{};
 
                         GravityStokes.use_concurrency(threads);
 
                         auto startSM = std::chrono::high_resolution_clock::now();
                         GravityStokes.get_acceleration(radius, latitude, longitude, ResultStokesMULTI);
+                        simulate_integrator_and_sofa(27);
                         auto endSM = std::chrono::high_resolution_clock::now();
                         double timeSM = std::chrono::duration<double, std::milli>(endSM - startSM).count();
 
@@ -354,9 +360,201 @@ int main() {
                 }
 
                 case 2:
+                {
                     std::cout << "Sequential Data Mode selected.\n";
-                    
+
+                    if (importflag == 0) {
+                        importStokesCombined(gravityModels[selectedModel], nmax);
+                        std::cout << "COMBINED STOKES COEFFICIENTS IMPORTED.\n";
+                        importedharmonics = nmax;
+                    }
+
+                    std::array<double, 3> xyz = RLatLonToXYZ(radius, latitude, longitude);
+                    std::array<double, 3> v = random_velocity(radius);
+                    std::array<double, 3> sphericalB = { 0,0,0 };
+                    std::array<double, 3> sphericalC = { 0,0,0 };
+                    std::array<double, 3> sphericalH1 = { 0,0,0 };
+                    std::array<double, 3> sphericalHm = { 0,0,0 };
+
+
+                    double xB = xyz[0], xC = xyz[0], xH1 = xyz[0], xHm = xyz[0];
+                    double yB = xyz[1], yC = xyz[1], yH1 = xyz[1], yHm = xyz[1];
+                    double zB = xyz[2], zC = xyz[2], zH1 = xyz[2], zHm = xyz[2];
+
+                    double vxB = v[0], vxC = v[0], vxH1 = v[0], vxHm = v[0];
+                    double vyB = v[1], vyC = v[1], vyH1 = v[1], vyHm = v[1];
+                    double vzB = v[2], vzC = v[2], vzH1 = v[2], vzHm = v[2];
+
+                    double radiusB = radius, radiusC = radius, radiusH1 = radius, radiusHm = radius;
+                    double latitudeB = latitude, latitudeC = latitude, latitudeH1 = latitude, latitudeHm = latitude;
+                    double longitudeB = longitude, longitudeC = longitude, longitudeH1 = longitude, longitudeHm = longitude;
+
+
+
+                    double deltat = 10;
+
+                    for (int i = 0; i < num_runs; i++) {
+
+
+                        // === Belikov ===
+                        std::array<double, 3> ResultBelikov{};
+                        auto startB = std::chrono::high_resolution_clock::now();
+                        gravityBelikov(radiusB, latitudeB, longitudeB, nmax, ResultBelikov);
+                        simulate_integrator_and_sofa(27);
+                        auto endB = std::chrono::high_resolution_clock::now();
+                        double timeB = std::chrono::duration<double, std::milli>(endB - startB).count();
+
+                        std::cout << "Belikov: AX=" << ResultBelikov[0]
+                            << " AY=" << ResultBelikov[1]
+                            << " AZ=" << ResultBelikov[2]
+                            << " TIME=" << timeB << " ms\n";
+
+                        xB = xB + vxB * deltat + 0.5 * (ResultBelikov[0] * deltat * deltat);
+                        yB = yB + vyB * deltat + 0.5 * (ResultBelikov[1] * deltat * deltat);
+                        zB = zB + vzB * deltat + 0.5 * (ResultBelikov[2] * deltat * deltat);
+
+                        vxB = vxB + ResultBelikov[0] * deltat;
+                        vyB = vyB + ResultBelikov[1] * deltat;
+                        vzB = vzB + ResultBelikov[2] * deltat;
+
+                        sphericalB = XYZtoRLatLon(xB, yB, zB);
+
+                        radiusB = sphericalB[0];
+                        latitudeB = sphericalB[1];
+                        longitudeB = sphericalB[2];
+
+                        // === Cunningham ===
+                        std::array<double, 3> ResultCunningham{};
+                        auto startC = std::chrono::high_resolution_clock::now();
+                        gravityCunningham(radiusC, latitudeC, longitudeC, nmax, ResultCunningham);
+                        simulate_integrator_and_sofa(27);
+                        auto endC = std::chrono::high_resolution_clock::now();
+                        double timeC = std::chrono::duration<double, std::milli>(endC - startC).count();
+
+                        std::cout << "Cunningham: AX=" << ResultCunningham[0]
+                            << " AY=" << ResultCunningham[1]
+                            << " AZ=" << ResultCunningham[2]
+                            << " TIME=" << timeC << " ms\n";
+
+
+
+
+                        xC = xC + vxC * deltat + 0.5 * (ResultCunningham[0] * deltat * deltat);
+                        yC = yC + vyC * deltat + 0.5 * (ResultCunningham[1] * deltat * deltat);
+                        zC = zC + vzC * deltat + 0.5 * (ResultCunningham[2] * deltat * deltat);
+
+                        vxC = vxC + ResultCunningham[0] * deltat;
+                        vyC = vyC + ResultCunningham[1] * deltat;
+                        vzC = vzC + ResultCunningham[2] * deltat;
+
+                        sphericalC = XYZtoRLatLon(xC, yC, zC);
+
+                        radiusC = sphericalC[0];
+                        latitudeC = sphericalC[1];
+                        longitudeC = sphericalC[2];
+
+
+
+
+
+
+
+                        // === Stokes (Holmes 1-thread) ===
+                        using namespace uniorb;
+                        std::array<double, 3> ResultStokesONE{};
+                        gravity_stokes GravityStokes(_c, _s, nmax, mmax, EARTH_MU, EARTH_RADIUS);
+                        GravityStokes.use_concurrency(1);
+
+                        auto startS = std::chrono::high_resolution_clock::now();
+                        GravityStokes.get_acceleration(radiusH1, latitudeH1, longitudeH1, ResultStokesONE);
+                        simulate_integrator_and_sofa(27);
+                        auto endS = std::chrono::high_resolution_clock::now();
+                        double timeS = std::chrono::duration<double, std::milli>(endS - startS).count();
+
+                        std::cout << "Stokes: AX=" << ResultStokesONE[0]
+                            << " AY=" << ResultStokesONE[1]
+                            << " AZ=" << ResultStokesONE[2]
+                            << " TIME=" << timeS << " ms\n";
+
+
+                        xH1 = xH1 + vxH1 * deltat + 0.5 * (ResultStokesONE[0] * deltat * deltat);
+                        yH1 = yH1 + vyH1 * deltat + 0.5 * (ResultStokesONE[1] * deltat * deltat);
+                        zH1 = zH1 + vzH1 * deltat + 0.5 * (ResultStokesONE[2] * deltat * deltat);
+
+                        vxH1 = vxH1 + ResultStokesONE[0] * deltat;
+                        vyH1 = vyH1 + ResultStokesONE[1] * deltat;
+                        vzH1 = vzH1 + ResultStokesONE[2] * deltat;
+
+                        sphericalH1 = XYZtoRLatLon(xH1, yH1, zH1);
+
+                        radiusH1 = sphericalH1[0];
+                        latitudeH1 = sphericalH1[1];
+                        longitudeH1 = sphericalH1[2];
+
+
+
+                        // === Stokes (Holmes multi-thread) ===
+
+                        std::array<double, 3> ResultStokesMULTI{};
+
+                        GravityStokes.use_concurrency(threads);
+
+                        auto startSM = std::chrono::high_resolution_clock::now();
+                        GravityStokes.get_acceleration(radiusHm, latitudeHm, longitudeHm, ResultStokesMULTI);
+                        simulate_integrator_and_sofa(27);
+                        auto endSM = std::chrono::high_resolution_clock::now();
+                        double timeSM = std::chrono::duration<double, std::milli>(endSM - startSM).count();
+
+                        std::cout << "Stokes: AX=" << ResultStokesMULTI[0]
+                            << " AY=" << ResultStokesMULTI[1]
+                            << " AZ=" << ResultStokesMULTI[2]
+                            << " TIME=" << timeSM << " ms\n";
+
+
+                        xHm = xHm + vxHm * deltat + 0.5 * (ResultStokesMULTI[0] * deltat * deltat);
+                        yHm = yHm + vyHm * deltat + 0.5 * (ResultStokesMULTI[1] * deltat * deltat);
+                        zHm = zHm + vzHm * deltat + 0.5 * (ResultStokesMULTI[2] * deltat * deltat);
+
+                        vxHm = vxHm + ResultStokesMULTI[0] * deltat;
+                        vyHm = vyHm + ResultStokesMULTI[1] * deltat;
+                        vzHm = vzHm + ResultStokesMULTI[2] * deltat;
+
+                        sphericalHm = XYZtoRLatLon(xHm, yHm, zHm);
+
+                        radiusHm = sphericalHm[0];
+                        latitudeHm = sphericalHm[1];
+                        longitudeHm = sphericalHm[2];
+
+
+                    }
+
+                    std::cout << "Belikov: radius=" << radiusB
+                        << " latitude=" << latitudeB
+                        << " longitude=" << longitudeB << std::endl;
+
+                    std::cout << "Cunningham: radius=" << radiusC
+                        << " latitude=" << latitudeC
+                        << " longitude=" << longitudeC << std::endl;
+
+                    std::cout << "Stokes 1-thread: radius=" << radiusH1
+                        << " latitude=" << latitudeH1
+                        << " longitude=" << longitudeH1 << std::endl;
+
+                    std::cout << "Stokes multi-thread: radius=" << radiusHm
+                        << " latitude=" << latitudeHm
+                        << " longitude=" << longitudeHm << std::endl;
+
+
+
+
+
+
+
+
+
                     break;
+                }
+
                 case 3:
                     std::cout << "Enter new number of runs: ";
                     std::cin >> num_runs;

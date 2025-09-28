@@ -8,7 +8,9 @@
 #include <sstream>
 #include <cstdlib>
 #include <cstring>
-
+#include <array>
+#include <random>
+#define M_PI 3.14159265358979323846
 
 
 #define EARTH_RADIUS 6378136.30 
@@ -163,4 +165,62 @@ void freeStokes(int nmax) {
 		free(Order2);
 		Order2 = nullptr;
 	}
+}
+
+
+
+
+
+
+std::array<double, 3> RLatLonToXYZ(double radius, double latitude, double longitude) {
+   
+    double latRad = latitude * M_PI / 180.0;
+    double lonRad = longitude * M_PI / 180.0;
+
+    double x = radius * std::cos(latRad) * std::cos(lonRad);
+    double y = radius * std::cos(latRad) * std::sin(lonRad);
+    double z = radius * std::sin(latRad);
+
+    
+    return { x, y, z };
+}
+
+
+
+
+
+
+double first_speed(double radius, double GM = 3.986004418e14) {
+    return std::sqrt(GM / radius);
+}
+
+
+std::array<double, 3> random_velocity(double radius) {
+    double speed = first_speed(radius);
+
+
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_real_distribution<double> dist(0.0, 1.0);
+
+  
+    double theta = acos(1.0 - 2.0 * dist(gen)); 
+    double phi = 2.0 * M_PI * dist(gen);       
+
+    std::array<double, 3> v;
+    v[0] = speed * sin(theta) * cos(phi); 
+    v[1] = speed * sin(theta) * sin(phi); 
+    v[2] = speed * cos(theta);            
+
+    return v;
+}
+
+
+
+std::array<double, 3> XYZtoRLatLon(double x, double y, double z) {
+    double radius = std::sqrt(x * x + y * y + z * z);       
+    double latitude = std::asin(z / radius) * 180.0 / M_PI;  
+    double longitude = std::atan2(y, x) * 180.0 / M_PI;      
+
+    return { radius, latitude, longitude };
 }
