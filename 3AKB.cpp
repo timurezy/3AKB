@@ -282,7 +282,12 @@ int main() {
                         std::cout << "COMBINED STOKES COEFFICIENTS IMPORTED.\n";
                         importedharmonics = nmax;
                     }
-
+                    double fulltimeB = 0;
+                    double fulltimeC = 0;
+                    double fulltimeS = 0;
+                    double fulltimeSM = 0;
+                    double s = 0;
+                    double e = 0;
 
                     for (int i = 0; i < num_runs; i++) {
                         auto coords = generateRandomCoordinates();
@@ -308,6 +313,8 @@ int main() {
                             << " AZ=" << ResultBelikov[2]
                             << " TIME=" << timeB << " ms\n";
 
+                        fulltimeB = fulltimeB + timeB;
+
                         // === Cunningham ===
                         std::array<double, 3> ResultCunningham{};
                         auto startC = std::chrono::high_resolution_clock::now();
@@ -320,6 +327,9 @@ int main() {
                             << " AY=" << ResultCunningham[1]
                             << " AZ=" << ResultCunningham[2]
                             << " TIME=" << timeC << " ms\n";
+
+                        fulltimeC = fulltimeC + timeC;
+
 
                         // === Stokes (Holmes 1-thread) ===
                         using namespace uniorb;
@@ -338,6 +348,8 @@ int main() {
                             << " AZ=" << ResultStokesONE[2]
                             << " TIME=" << timeS << " ms\n";
 
+                        fulltimeS = fulltimeS + timeS;
+
                         // === Stokes (Holmes multi-thread) ===
 
                         std::array<double, 3> ResultStokesMULTI{};
@@ -355,7 +367,24 @@ int main() {
                             << " AZ=" << ResultStokesMULTI[2]
                             << " TIME=" << timeSM << " ms\n";
 
+                        fulltimeSM = fulltimeSM + timeSM;
+
                     }
+
+                    s = fulltimeS / fulltimeSM;
+                    e = s / threads;
+
+                    std::cout
+                        << "fulltimeC = " << fulltimeC << "\n"
+                        << "fulltimeHM = " << fulltimeSM << "\n"
+                        << "fulltimeH1 = " << fulltimeS << "\n"
+                        << "fulltimeB = " << fulltimeB << "\n"
+                        << "SPEEDUP = " << s << "\n"
+                        << "efficiency = " << e << "\n";
+
+
+
+
                     break;
                 }
 
@@ -375,6 +404,14 @@ int main() {
                     std::array<double, 3> sphericalC = { 0,0,0 };
                     std::array<double, 3> sphericalH1 = { 0,0,0 };
                     std::array<double, 3> sphericalHm = { 0,0,0 };
+
+
+                    double fulltimeB = 0;
+                    double fulltimeC = 0;
+                    double fulltimeH1 = 0;
+                    double fulltimeHm = 0;
+                    double s = 0;
+                    double e = 0;
 
 
                     double xB = xyz[0], xC = xyz[0], xH1 = xyz[0], xHm = xyz[0];
@@ -423,6 +460,8 @@ int main() {
                         latitudeB = sphericalB[1];
                         longitudeB = sphericalB[2];
 
+                        fulltimeB = fulltimeB + timeB;
+
                         // === Cunningham ===
                         std::array<double, 3> ResultCunningham{};
                         auto startC = std::chrono::high_resolution_clock::now();
@@ -455,7 +494,7 @@ int main() {
 
 
 
-
+                        fulltimeC = fulltimeC + timeC;
 
 
 
@@ -491,7 +530,7 @@ int main() {
                         latitudeH1 = sphericalH1[1];
                         longitudeH1 = sphericalH1[2];
 
-
+                        fulltimeH1 = fulltimeH1 + timeS;
 
                         // === Stokes (Holmes multi-thread) ===
 
@@ -525,6 +564,8 @@ int main() {
                         latitudeHm = sphericalHm[1];
                         longitudeHm = sphericalHm[2];
 
+                        fulltimeHm = fulltimeHm + timeSM;
+
 
                     }
 
@@ -545,8 +586,16 @@ int main() {
                         << " longitude=" << longitudeHm << std::endl;
 
 
+                    s = fulltimeH1 / fulltimeHm;
+                    e = s / threads;
 
-
+                    std::cout
+                        << "fulltimeC = " << fulltimeC << "\n"
+                        << "fulltimeHM = " << fulltimeHm << "\n"
+                        << "fulltimeH1 = " << fulltimeH1 << "\n"
+                        << "fulltimeB = " << fulltimeB << "\n"
+                        << "SPEEDUP " << s << "\n"
+                        << "efficiency " << e << "\n";
 
 
 
