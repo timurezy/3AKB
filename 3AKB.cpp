@@ -5,6 +5,7 @@
 #include <array>
 #include <iostream>
 #include <chrono>
+#include <iomanip>
 
 
 
@@ -44,6 +45,7 @@ int main() {
             << "7. SELECT GRAVITY MODEL\n"
             << "8. IMPORT HARMONICS\n"
             << "9. NUMBER OF THREADS\n"
+            << "10. COMPARE MODE \n"
             << "0. EXIT\n"
             << "ENTER CHOICE: ";
 
@@ -251,6 +253,7 @@ int main() {
                     << "- HARMONICS: " << nmax << "\n"
                     << "- COORDINATES: RADIUS = " << radius << " M, LATITUDE = " << latitude << ", LONGITUDE = " << longitude << "\n"
                     << "- DOWNLOADED HARMONICS: " << importedharmonics << "\n"
+                    << "- NUMBER OF RUNS: " << num_runs << "\n"
                     << "- THREADS = " << threads << "\n\n";
 
 
@@ -261,6 +264,8 @@ int main() {
                     << "2. Sequential Data Mode\n"
                     << "3. Change Number of Runs\n"
                     << "4. Back to Main Menu\n"
+                    << "5. Random to file\n"
+                    << "6. Consequential to file\n"
                     << "Enter choice: ";
                 int sub_option;
                 std::cin >> sub_option;
@@ -622,6 +627,141 @@ int main() {
                 default:
                     std::cout << "INVALID OPTION. TRY AGAIN.\n";
                     break;
+
+
+                case 5: {
+                    std::cout << "Random Data Mode to file (formatted output) selected.\n";
+
+                    if (importflag == 0) {
+                        importStokesCombined(gravityModels[selectedModel], nmax);
+                        importedharmonics = nmax;
+                    }
+
+                    std::ofstream file("results_RANDOM.csv");
+                    if (!file.is_open()) {
+                        std::cerr << "Ошибка: не удалось открыть файл для записи.\n";
+                        break;
+                    }
+
+                    file << "Algorithm,Run,Time (ms),R,Latitude,Longitude,ax,ay,az\n";
+
+                    double total_time_belikov = 0.0;
+                    double total_time_cunningham = 0.0;
+                    double total_time_stokes_single = 0.0;
+                    double total_time_stokes_multi = 0.0;
+
+                    std::array<double, 3> resB = { 0.0, 0.0, 0.0 };
+                    std::array<double, 3> resC = { 0.0, 0.0, 0.0 };
+                    std::array<double, 3> resS1 = { 0.0, 0.0, 0.0 };
+                    std::array<double, 3> resSM = { 0.0, 0.0, 0.0 };
+
+                    std::cout << "Algorithm is running...\n";
+
+                    for (int run = 1; run <= num_runs; ++run) {
+                        auto coords = generateRandomCoordinates();
+                        radius = coords[0];
+                        latitude = coords[1];
+                        longitude = coords[2];
+
+                        // === Belikov ===
+                    
+                        auto startB = std::chrono::high_resolution_clock::now();
+                        gravityBelikov(radius, latitude, longitude, nmax, resB);
+                        simulate_integrator_and_sofa(27);
+                        auto endB = std::chrono::high_resolution_clock::now();
+                        double timeB = std::chrono::duration<double, std::milli>(endB - startB).count();
+                        file << "Belikov," << run << "," << timeB << ","
+                            << radius << "," << latitude << "," << longitude << ","
+                            << resB[0] << "," << resB[1] << "," << resB[2] << "\n";
+                        total_time_belikov += timeB;
+
+                        // === Cunningham ===
+                     
+                        auto startC = std::chrono::high_resolution_clock::now();
+                        gravityCunningham(radius, latitude, longitude, nmax, resC);
+                        simulate_integrator_and_sofa(27);
+                        auto endC = std::chrono::high_resolution_clock::now();
+                        double timeC = std::chrono::duration<double, std::milli>(endC - startC).count();
+                        file << "Cunningham," << run << "," << timeC << ","
+                            << radius << "," << latitude << "," << longitude << ","
+                            << resC[0] << "," << resC[1] << "," << resC[2] << "\n";
+                        total_time_cunningham += timeC;
+
+                        // === Stokes (1-thread) ===
+                        using namespace uniorb;
+                     
+                        gravity_stokes GravityStokes(_c, _s, nmax, mmax, EARTH_MU, EARTH_RADIUS);
+                        GravityStokes.use_concurrency(1);
+
+                        auto startS1 = std::chrono::high_resolution_clock::now();
+                        GravityStokes.get_acceleration(radius, latitude, longitude, resS1);
+                        simulate_integrator_and_sofa(27);
+                        auto endS1 = std::chrono::high_resolution_clock::now();
+                        double timeS1 = std::chrono::duration<double, std::milli>(endS1 - startS1).count();
+                        file << "Stokes_1thread," << run << "," << timeS1 << ","
+                            << radius << "," << latitude << "," << longitude << ","
+                            << resS1[0] << "," << resS1[1] << "," << resS1[2] << "\n";
+                        total_time_stokes_single += timeS1;
+
+                        // === Stokes (multi-thread) ===
+                 
+                        GravityStokes.use_concurrency(threads);
+
+                        auto startSM = std::chrono::high_resolution_clock::now();
+                        GravityStokes.get_acceleration(radius, latitude, longitude, resSM);
+                        simulate_integrator_and_sofa(27);
+                        auto endSM = std::chrono::high_resolution_clock::now();
+                        double timeSM = std::chrono::duration<double, std::milli>(endSM - startSM).count();
+                        file << "Stokes_multithread," << run << "," << timeSM << ","
+                            << radius << "," << latitude << "," << longitude << ","
+                            << resSM[0] << "," << resSM[1] << "," << resSM[2] << "\n";
+                        total_time_stokes_multi += timeSM;
+
+                        // === Прогресс каждые 5% ===
+                        int progress = static_cast<int>(100.0 * run / num_runs);
+                        if (progress % 5 == 0)
+                            std::cout << "\rProgress: " << progress << "%" << std::flush;
+                    }
+
+                    std::cout << "\rProgress: 100%\nComputation complete.\n";
+
+                    // === Вычисление ускорения и эффективности ===
+                    double speedup = total_time_stokes_single / total_time_stokes_multi;
+                    double efficiency = speedup / threads;
+
+                    // === Финальные результаты ===
+                    file << "\nTotal time (ms):\n";
+                    file << "Belikov," << total_time_belikov << "\n";
+                    file << "Cunningham," << total_time_cunningham << "\n";
+                    file << "Stokes_1thread," << total_time_stokes_single << "\n";
+                    file << "Stokes_multithread," << total_time_stokes_multi << "\n";
+
+                    file << "Speedup," << speedup << "\n";
+                    file << "Efficiency," << efficiency << "\n";
+
+                    file << "\nFinal coordinates and accelerations:\n";
+                    file << "R=" << radius << " LAT=" << latitude << " LON=" << longitude << "\n";
+                   
+                    file << std::fixed << std::setprecision(10);
+                    file << "Final accelerations (m/s^2):\n";
+                    file << "Belikov,"
+                        << resB[0] << "," << resB[1] << "," << resB[2] << "\n";
+                    file << "Cunningham,"
+                        << resC[0] << "," << resC[1] << "," << resC[2] << "\n";
+                    file << "Holmes_1thread,"
+                        << resS1[0] << "," << resS1[1] << "," << resS1[2] << "\n";
+                    file << "Holmes_multithread,"
+                        << resSM[0] << "," << resSM[1] << "," << resSM[2] << "\n";
+
+                    file.close();
+                    std::cout << "Results saved to results_case6.csv\n";
+
+                    break;
+                }
+
+
+
+
                 }
                 }
                 break;
