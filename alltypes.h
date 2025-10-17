@@ -151,20 +151,31 @@ void importStokesCombined(const std::string& path, int nmax) {
 
 
 void freeStokes(int nmax) {
-	if (Cnm)   free(Cnm);
-	if (Snm)   free(Snm);
-	if (Cnm1)  free(Cnm1);
-	if (Snm1)  free(Snm1);
+  
+    if (Cnm) { free(Cnm);  Cnm = nullptr; }
+    if (Snm) { free(Snm);  Snm = nullptr; }
+    if (Cnm1) { free(Cnm1); Cnm1 = nullptr; }
+    if (Snm1) { free(Snm1); Snm1 = nullptr; }
 
-	Cnm = Snm = Cnm1 = Snm1 = nullptr;
+  
+    _c.clear();
+    _s.clear();
+    _c.shrink_to_fit();
+    _s.shrink_to_fit();
 
-	if (Order2) {
-		for (int i = 0; i <= nmax; i++) {
-			if (Order2[i]) free(Order2[i]);
-		}
-		free(Order2);
-		Order2 = nullptr;
-	}
+ 
+    if (Order2) {
+        for (int i = 0; i <= nmax; ++i) {
+            if (Order2[i]) {
+                free(Order2[i]);
+                Order2[i] = nullptr;
+            }
+        }
+        free(Order2);
+        Order2 = nullptr;
+    }
+
+    importflag = 0;
 }
 
 
