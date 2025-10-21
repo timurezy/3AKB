@@ -2,6 +2,7 @@
 #include "Belikov.h"
 #include "Cunningham.h"
 #include "Simulate.h"
+#include "AlgorithmRunner.h"
 #include <array>
 #include <iostream>
 #include <chrono>
@@ -66,178 +67,33 @@ int main() {
 
 
         switch (option) {
-        case 1: {
-            using namespace uniorb;
-
-            if (importflag == 0) {
-                importStokesCombined(gravityModels[selectedModel], nmax);
-                std::cout << "COMBINED STOKES COEFFICIENTS IMPORTED.\n";
-                importedharmonics = nmax;
-            }
-            auto Result = std::array<double, 3>();
-            //auto GravityStokes = gravity_stokes();
-            gravity_stokes GravityStokes(_c, _s, nmax, mmax, EARTH_MU, EARTH_RADIUS);
-
-            GravityStokes.use_concurrency(1);
-
-            auto start = std::chrono::high_resolution_clock::now();
-            GravityStokes.get_acceleration(radius, latitude, longitude, Result);
-            auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double, std::milli>(end - start).count();
-
-            std::cout
-                << "AX = " << Result[0] << std::endl
-                << "AY = " << Result[1] << std::endl
-                << "AZ = " << Result[2] << std::endl
-                << "TIME: " << total_time << " MS\n";
+        case 1:
+            runHolmesSingleThread(radius, latitude, longitude, nmax, mmax, importedharmonics);
             break;
-        }
-        case 2: {
-
-            std::array<double, 3> Result{};
-            if (importflag == 0) {
-                importStokesCombined(gravityModels[selectedModel], nmax);
-                std::cout << "COMBINED STOKES COEFFICIENTS IMPORTED.\n";
-                importedharmonics = nmax;
-            }
-            auto start = std::chrono::high_resolution_clock::now();
-            gravityBelikov(radius, latitude, longitude, nmax, Result);
-            auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double, std::milli>(end - start).count();
-
-            std::cout
-                << "AX = " << Result[0] << "\n"
-                << "AY = " << Result[1] << "\n"
-                << "AZ = " << Result[2] << "\n"
-                << "TIME: " << total_time << " MS\n";
+        case 2:
+            runBelikov(radius, latitude, longitude, nmax, importedharmonics);
             break;
-        }
-        case 3: {
-
-            std::array<double, 3> Result{};
-            if (importflag == 0) {
-                importStokesCombined(gravityModels[selectedModel], nmax);
-                std::cout << "COMBINED STOKES COEFFICIENTS IMPORTED.\n";
-                importedharmonics = nmax;
-            }
-            auto start = std::chrono::high_resolution_clock::now();
-            gravityCunningham(radius, latitude, longitude, nmax, Result);
-            auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double, std::milli>(end - start).count();
-
-            std::cout
-                << "AX = " << Result[0] << "\n"
-                << "AY = " << Result[1] << "\n"
-                << "AZ = " << Result[2] << "\n"
-                << "TIME: " << total_time << " MS\n";
+        case 3:
+            runCunningham(radius, latitude, longitude, nmax, importedharmonics);
             break;
-        }
-        case 4: {
-
-            using namespace uniorb;
-
-            auto Result = std::array<double, 3>();
-            gravity_stokes GravityStokes(_c, _s, nmax, mmax, EARTH_MU, EARTH_RADIUS);
-            if (importflag == 0) {
-                importStokesCombined(gravityModels[selectedModel], nmax);
-                std::cout << "COMBINED STOKES COEFFICIENTS IMPORTED.\n";
-                importedharmonics = nmax;
-            }
-            GravityStokes.use_concurrency(threads);
-
-            auto start = std::chrono::high_resolution_clock::now();
-            GravityStokes.get_acceleration(radius, latitude, longitude, Result);
-            auto end = std::chrono::high_resolution_clock::now();
-            double total_time = std::chrono::duration<double, std::milli>(end - start).count();
-
-            std::cout
-                << "AX = " << Result[0] << std::endl
-                << "AY = " << Result[1] << std::endl
-                << "AZ = " << Result[2] << std::endl
-                << "TIME: " << total_time << " MS\n";
+        case 4:
+            runHolmesMultiThread(radius, latitude, longitude, nmax, mmax, threads, importedharmonics);
             break;
-        }
-        case 5: {
-            freeStokes(nmax);
-            importedharmonics = 0;
-            if (selectedModel == 1) {
-                std::cout << "ENTER NEW NMAX (1 TO 360): ";
-            }
-            else {
-                std::cout << "ENTER NEW NMAX (1 TO 2000): ";
-            }
-            int new_nmax;
-            std::cin >> new_nmax;
-            if (selectedModel == 1) {
-                if (std::cin.fail() || new_nmax < 1 || new_nmax > 360) {
-                    std::cin.clear();
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    std::cout << "INVALID INPUT. HARMONICS NOT CHANGED.\n";
-                }
-                else {
-                    nmax = new_nmax;
-                    mmax = new_nmax;
-                    std::cout << "HARMONICS UPDATED.\n";
-                }
-            }
-            else {
-                if (std::cin.fail() || new_nmax < 1 || new_nmax > 2000) {
-                    std::cin.clear();
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    std::cout << "INVALID INPUT. HARMONICS NOT CHANGED.\n";
-                }
-                else {
-                    nmax = new_nmax;
-                    mmax = new_nmax;
-                    std::cout << "HARMONICS UPDATED.\n";
-                }
-            }
+        case 5:
+            changeHarmonics(nmax, mmax, importedharmonics);
             break;
-        }
-        case 6: {
-            std::cout << "ENTER RADIUS (6000000 TO 7000000 M): ";
-            double r;
-            std::cin >> r;
-
-            std::cout << "ENTER LATITUDE (-90 TO 90 DEG): ";
-            double lat;
-            std::cin >> lat;
-
-            std::cout << "ENTER LONGITUDE (-180 TO 180 DEG): ";
-            double lon;
-            std::cin >> lon;
-
-            if (std::cin.fail() || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "INVALID INPUT. COORDINATES NOT CHANGED.\n";
-            }
-            else {
-                radius = r;
-                latitude = lat;
-                longitude = lon;
-                std::cout << "COORDINATES UPDATED.\n";
-            }
+        case 6:
+            changeCoordinates(radius, latitude, longitude);
             break;
-        }
-        case 7: {
-            freeStokes(nmax);
-            selectGravityModel(selectedModel, gravityModels);
-            importedharmonics = 0;
+        case 7:
+            changeGravityModel(nmax, importedharmonics);
             break;
-        }
-        case 8: {
-            freeStokes(nmax);
-            importStokesCombined(gravityModels[selectedModel], nmax);
-            std::cout << "COMBINED STOKES COEFFICIENTS IMPORTED.\n";
-            importedharmonics = nmax;
+        case 8:
+            importHarmonics(nmax, importedharmonics);
             break;
-        }
-        case 9: {
-            std::cout << "NUMBER OF THREADS?" << "\n";
-            std::cin >> threads;
+        case 9:
+            changeThreads(threads);
             break;
-        }
 
         case 10: {
             bool submenu_active = true;
