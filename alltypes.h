@@ -127,7 +127,7 @@ void importStokesCombined(const std::string& path, int nmax) {
         double C, S;
         iss >> n >> m >> C >> S;
         if (iss.fail()) continue;
-        if (n > nmax || m > n) continue;
+        if (n > nmax || m > n) break;
 
         int idx = order2(n, m);
         double norm = PfBel(n, m);
