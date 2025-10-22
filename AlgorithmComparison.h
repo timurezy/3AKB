@@ -37,7 +37,13 @@ void displayComparisonMenu(const std::string& gravityModelName, int nmax, double
 void runRandomDataComparison(int nmax, int num_runs, int threads, int& importedharmonics) {
     std::cout << "Random Data Mode to file (formatted output) selected.\n";
 
-    if (importflag == 0) {
+    if (nmax == 0) {
+        std::cout << "WARNING: NMAX = 0 (Keplerian mode). Comparison mode requires harmonics to be set.\n";
+        std::cout << "Please set NMAX > 0 to run comparison mode.\n";
+        return;
+    }
+
+    if (importflag == 0 && nmax != 0) {
         importStokesCombined(gravityModels[selectedModel], nmax);
         importedharmonics = nmax;
     }
@@ -159,6 +165,12 @@ void runRandomDataComparison(int nmax, int num_runs, int threads, int& importedh
 void runSequentialDataComparison(double radius, double latitude, double longitude, int nmax, 
                                 int num_runs, int threads, int& importedharmonics) {
     std::cout << "Sequential Data Mode to file (formatted output) selected.\n";
+
+    if (nmax == 0) {
+        std::cout << "WARNING: NMAX = 0 (Keplerian mode). Comparison mode requires harmonics to be set.\n";
+        std::cout << "Please set NMAX > 0 to run comparison mode.\n";
+        return;
+    }
 
     if (importflag == 0) {
         importStokesCombined(gravityModels[selectedModel], nmax);

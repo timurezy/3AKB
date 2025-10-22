@@ -349,6 +349,14 @@
 		};
 
 		
+		r = 6378000.;
+		phi = 0.;
+		lambda = 0.;
+		n = 2;
+
+		for (int i = 0; i < 5; i++) {
+			std::cout<< Cnm1[i] <<std::endl;
+		}
 
 	 Acc_Field(EARTH_MU, EARTH_RADIUS, r, phi, lambda, Cnm1, Snm1, n + 2, rdotdot); 
 
