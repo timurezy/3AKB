@@ -40,7 +40,7 @@ void runRandomDataComparison(int nmax, int num_runs, int threads, int& importedh
     if (nmax == 0) {
         std::cout << "WARNING: NMAX = 0 (Keplerian mode). Comparison mode requires harmonics to be set.\n";
         std::cout << "Please set NMAX > 0 to run comparison mode.\n";
-        //return;
+        return;
     }
 
     if (importflag == 0 && nmax != 0) {
