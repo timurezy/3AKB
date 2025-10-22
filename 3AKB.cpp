@@ -4,6 +4,7 @@
 #include "Simulate.h"
 #include "SingleAlgorithmExecution.h"
 #include "AlgorithmComparison.h"
+#include "AlgorithmBenchmarking.h"
 #include <array>
 #include <iostream>
 #include <chrono>
@@ -39,11 +40,12 @@ int main() {
         std::cout << "SELECT METHOD:\n"
             << "1. RUN INDIVIDUAL ALGORITHM\n"
             << "2. ALGORITHM COMPARISON MODE\n"
-            << "3. CHANGE MAX HARMONICS\n"
-            << "4. CHANGE INPUT COORDINATES\n"
-            << "5. SELECT GRAVITY MODEL\n"
-            << "6. IMPORT HARMONICS\n"
-            << "7. NUMBER OF THREADS\n"
+            << "3. ALGORITHM BENCHMARKING MODE\n"
+            << "4. CHANGE MAX HARMONICS\n"
+            << "5. CHANGE INPUT COORDINATES\n"
+            << "6. SELECT GRAVITY MODEL\n"
+            << "7. IMPORT HARMONICS\n"
+            << "8. NUMBER OF THREADS\n"
             << "0. EXIT\n"
             << "ENTER CHOICE: ";
 
@@ -71,18 +73,21 @@ int main() {
             runComparisonMode(radius, latitude, longitude, nmax, threads, importedharmonics);
             break;
         case 3:
-            changeHarmonics(nmax, mmax, importedharmonics);
+            runBenchmarkingMode(importedharmonics);
             break;
         case 4:
-            changeCoordinates(radius, latitude, longitude);
+            changeHarmonics(nmax, mmax, importedharmonics);
             break;
         case 5:
-            changeGravityModel(nmax, importedharmonics);
+            changeCoordinates(radius, latitude, longitude);
             break;
         case 6:
-            importHarmonics(nmax, importedharmonics);
+            changeGravityModel(nmax, importedharmonics);
             break;
         case 7:
+            importHarmonics(nmax, importedharmonics);
+            break;
+        case 8:
             changeThreads(threads);
             break;
 
