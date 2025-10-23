@@ -13,6 +13,65 @@
 #include <vector>
 #include <string>
 
+
+std::string cleanName(std::string name) {
+    // Заменяем пробелы на '_'
+    std::replace(name.begin(), name.end(), ' ', '_');
+    // Удаляем переносы строк и возвраты каретки
+    name.erase(std::remove_if(name.begin(), name.end(), [](char c) { return c == '\n' || c == '\r'; }), name.end());
+    // Удаляем множественные '_': заменяем '__' на '_', пока они есть
+    size_t pos;
+    while ((pos = name.find("__")) != std::string::npos) {
+        name.replace(pos, 2, "_");
+    }
+    // Удаляем ведущие и trailing '_'
+    if (!name.empty() && name[0] == '_') name.erase(0, 1);
+    if (!name.empty() && name.back() == '_') name.pop_back();
+    return name;
+}
+
+// Функция для получения имени модели процессора
+std::string getProcessorName() {
+    std::string processorName;
+#ifdef _WIN32
+    // Вызов wmic для Windows
+    std::stringstream cmd;
+    cmd << "wmic cpu get name /value";
+    FILE* pipe = _popen(cmd.str().c_str(), "r");
+    if (pipe) {
+        char buffer[256];
+        std::string result;
+        while (fgets(buffer, sizeof(buffer), pipe) != NULL) {
+            result += buffer;
+        }
+        _pclose(pipe);
+        // Парсинг: ищем "Name=" и извлекаем значение
+        size_t pos = result.find("Name=");
+        if (pos != std::string::npos) {
+            pos += 5; // Пропустить "Name="
+            size_t end = result.find("\n", pos);
+            processorName = result.substr(pos, end - pos);
+        }
+    }
+#else
+    // Для Linux: используйте popen
+    FILE* pipe = popen("grep 'model name' /proc/cpuinfo | head -1 | cut -d: -f2 | tr -d '\\n'", "r");
+    if (pipe) {
+        char buffer[256];
+        if (fgets(buffer, sizeof(buffer), pipe) != NULL) {
+            processorName = std::string(buffer);
+        }
+        pclose(pipe);
+    }
+#endif
+    if (processorName.empty()) {
+        processorName = "Unknown_CPU";
+    }
+    // Очищаем имя
+    return cleanName(processorName);
+}
+
+
 // Get the number of hardware threads available on the system
 int getMaxThreads() {
     return std::thread::hardware_concurrency();
@@ -45,7 +104,18 @@ void runComprehensiveBenchmark(int num_runs, int& importedharmonics) {
     }
     
     // Create output file
-    std::ofstream file("benchmark_comprehensive.csv");
+
+    // Получаем имя процессора
+    std::string processorName = getProcessorName();
+
+    // Генерируем имя файла
+    std::stringstream filename;
+    filename << "benchmark_" << processorName << "_" << maxThreads << "_" << num_runs << ".csv";
+
+    // Открываем файл
+    std::ofstream file(filename.str());
+
+    //std::ofstream file("benchmark_comprehensive.csv");
     if (!file.is_open()) {
         std::cerr << "Error: Could not open file for writing.\n";
         return;
@@ -57,7 +127,7 @@ void runComprehensiveBenchmark(int num_runs, int& importedharmonics) {
     std::cout << "\nStarting benchmark...\n";
     
     // Iterate through harmonics from 2 to maxHarmonics
-    for (int nmax = 2; nmax <= maxHarmonics; nmax++) {
+    for (int nmax = 2; nmax <= maxHarmonics; nmax+=5) {
         std::cout << "\n=== Testing with " << nmax << " harmonics ===\n";
         
         // Import harmonics for current nmax
