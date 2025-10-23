@@ -1,0 +1,30 @@
+
+\begin{table*}[ht]
+\centering
+\caption{Speedup for Holmes algorithms across different processors and harmonic numbers.}
+\label{tab:speedup_metrics}
+\begin{tabular}{c|ccc|ccc}
+\hline
+ & \multicolumn{3}{c}{\textbf{n=52}}  & \multicolumn{3}{c}{\textbf{n=357}}  \\
+\cline{2-7}
+{\textbf{Threads}}
+& \textbf{P4T8} & \textbf{P6T12} & \textbf{P8T16} & \textbf{P4T8} & \textbf{P6T12} & \textbf{P8T16} \\
+\hline
+\textbf{2} & 0.764 & 1.094 & 1.063 & 1.660 & 1.865 & 1.817 \\ \hline
+\textbf{3} & 0.833 & 1.276 & 1.112 & 2.352 & 2.772 & 2.730 \\ \hline
+\textbf{4} & 0.591 & 1.260 & 1.197 & 2.896 & 3.588 & 3.389 \\ \hline
+\textbf{5} & 0.454 & 1.310 & 1.089 & 2.596 & 3.993 & 4.266 \\ \hline
+\textbf{6} & 0.406 & 1.261 & 1.129 & 2.831 & 3.891 & 4.953 \\ \hline
+\textbf{7} & 0.355 & 1.217 & 1.003 & 3.203 & 4.358 & 5.343 \\ \hline
+\textbf{8} & 0.304 & 1.065 & 0.861 & 3.235 & 4.813 & 4.718 \\ \hline
+\textbf{9} & - & 0.986 & 0.857 & - & 5.272 & 4.781 \\ \hline
+\textbf{10} & - & 0.916 & 0.794 & - & 5.606 & 4.900 \\ \hline
+\textbf{11} & - & 0.913 & 0.721 & - & 5.975 & 4.938 \\ \hline
+\textbf{12} & - & 0.805 & 0.660 & - & 5.466 & 5.600 \\ \hline
+\textbf{13} & - & - & 0.661 & - & - & 5.717 \\ \hline
+\textbf{14} & - & - & 0.614 & - & - & 6.027 \\ \hline
+\textbf{15} & - & - & 0.568 & - & - & 6.302 \\ \hline
+\textbf{16} & - & - & 0.531 & - & - & 6.252 \\ \hline
+
+\end{tabular}
+\end{table*}
