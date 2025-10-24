@@ -57,7 +57,7 @@ void runComprehensiveBenchmark(int num_runs, int& importedharmonics) {
     std::cout << "\nStarting benchmark...\n";
     
     // Iterate through harmonics from 2 to maxHarmonics
-    for (int nmax = 2; nmax <= maxHarmonics; nmax++) {
+    for (int nmax = 2; nmax <= maxHarmonics; nmax+=5) {
         std::cout << "\n=== Testing with " << nmax << " harmonics ===\n";
         
         // Import harmonics for current nmax
