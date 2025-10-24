@@ -1,0 +1,30 @@
+
+\begin{table*}[ht]
+\centering
+\caption{Overhead (ms) for Holmes algorithms across different processors and harmonic numbers.}
+\label{tab:overhead_metrics}
+\begin{tabular}{c|ccc|ccc}
+\hline
+ & \multicolumn{3}{c}{\textbf{n=52}}  & \multicolumn{3}{c}{\textbf{n=357}}  \\
+\cline{2-7}
+{\textbf{Threads}}
+& \textbf{P4T8} & \textbf{P6T12} & \textbf{P8T16} & \textbf{P4T8} & \textbf{P6T12} & \textbf{P8T16} \\
+\hline
+\textbf{2} & 11.654 & 5.048 & 0.833 & 64.791 & 20.000 & 3.946 \\ \hline
+\textbf{3} & 18.734 & 8.234 & 1.607 & 87.120 & 22.628 & 3.871 \\ \hline
+\textbf{4} & 41.535 & 13.250 & 2.214 & 120.463 & 31.583 & 7.067 \\ \hline
+\textbf{5} & 72.125 & 17.175 & 3.395 & 292.721 & 69.450 & 6.748 \\ \hline
+\textbf{6} & 99.319 & 22.906 & 4.081 & 353.721 & 149.122 & 8.286 \\ \hline
+\textbf{7} & 134.931 & 28.947 & 5.657 & 374.628 & 166.862 & 12.157 \\ \hline
+\textbf{8} & 182.452 & 39.691 & 7.839 & 465.593 & 182.219 & 27.260 \\ \hline
+\textbf{9} & - & 49.530 & 8.989 & - & 194.621 & 34.590 \\ \hline
+\textbf{10} & - & 60.431 & 10.963 & - & 215.701 & 40.798 \\ \hline
+\textbf{11} & - & 67.299 & 13.492 & - & 231.494 & 48.112 \\ \hline
+\textbf{12} & - & 84.767 & 16.250 & - & 329.012 & 44.791 \\ \hline
+\textbf{13} & - & - & 17.647 & - & - & 49.938 \\ \hline
+\textbf{14} & - & - & 20.616 & - & - & 51.854 \\ \hline
+\textbf{15} & - & - & 24.032 & - & - & 54.105 \\ \hline
+\textbf{16} & - & - & 27.565 & - & - & 61.113 \\ \hline
+
+\end{tabular}
+\end{table*}
