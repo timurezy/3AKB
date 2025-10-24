@@ -127,14 +127,14 @@ void runComprehensiveBenchmark(int num_runs, int& importedharmonics) {
     std::cout << "\nStarting benchmark...\n";
     
     // Iterate through harmonics from 2 to maxHarmonics
-    for (int nmax = 2; nmax <= maxHarmonics; nmax+=5) {
+    for (int nmax = 5; nmax <= maxHarmonics; nmax += 5) {
         std::cout << "\n=== Testing with " << nmax << " harmonics ===\n";
-        
+
         // Import harmonics for current nmax
-        if (importedharmonics != nmax) {
+        if (importedharmonics < maxHarmonics) {
             freeStokes(importedharmonics);
-            importStokesCombined(gravityModels[selectedModel], nmax);
-            importedharmonics = nmax;
+            importStokesCombined(gravityModels[selectedModel], maxHarmonics);
+            importedharmonics = maxHarmonics;
             std::cout << "Harmonics imported.\n";
         }
         
