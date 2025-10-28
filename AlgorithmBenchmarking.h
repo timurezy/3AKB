@@ -15,26 +15,26 @@
 
 
 std::string cleanName(std::string name) {
-    // Заменяем пробелы на '_'
+    // Г‡Г Г¬ГҐГ­ГїГҐГ¬ ГЇГ°Г®ГЎГҐГ«Г» Г­Г  '_'
     std::replace(name.begin(), name.end(), ' ', '_');
-    // Удаляем переносы строк и возвраты каретки
+    // Г“Г¤Г Г«ГїГҐГ¬ ГЇГҐГ°ГҐГ­Г®Г±Г» Г±ГІГ°Г®ГЄ ГЁ ГўГ®Г§ГўГ°Г ГІГ» ГЄГ Г°ГҐГІГЄГЁ
     name.erase(std::remove_if(name.begin(), name.end(), [](char c) { return c == '\n' || c == '\r'; }), name.end());
-    // Удаляем множественные '_': заменяем '__' на '_', пока они есть
+    // Г“Г¤Г Г«ГїГҐГ¬ Г¬Г­Г®Г¦ГҐГ±ГІГўГҐГ­Г­Г»ГҐ '_': Г§Г Г¬ГҐГ­ГїГҐГ¬ '__' Г­Г  '_', ГЇГ®ГЄГ  Г®Г­ГЁ ГҐГ±ГІГј
     size_t pos;
     while ((pos = name.find("__")) != std::string::npos) {
         name.replace(pos, 2, "_");
     }
-    // Удаляем ведущие и trailing '_'
+    // Г“Г¤Г Г«ГїГҐГ¬ ГўГҐГ¤ГіГ№ГЁГҐ ГЁ trailing '_'
     if (!name.empty() && name[0] == '_') name.erase(0, 1);
     if (!name.empty() && name.back() == '_') name.pop_back();
     return name;
 }
 
-// Функция для получения имени модели процессора
+// Г”ГіГ­ГЄГ¶ГЁГї Г¤Г«Гї ГЇГ®Г«ГіГ·ГҐГ­ГЁГї ГЁГ¬ГҐГ­ГЁ Г¬Г®Г¤ГҐГ«ГЁ ГЇГ°Г®Г¶ГҐГ±Г±Г®Г°Г 
 std::string getProcessorName() {
     std::string processorName;
 #ifdef _WIN32
-    // Вызов wmic для Windows
+    // Г‚Г»Г§Г®Гў wmic Г¤Г«Гї Windows
     std::stringstream cmd;
     cmd << "wmic cpu get name /value";
     FILE* pipe = _popen(cmd.str().c_str(), "r");
@@ -45,16 +45,16 @@ std::string getProcessorName() {
             result += buffer;
         }
         _pclose(pipe);
-        // Парсинг: ищем "Name=" и извлекаем значение
+        // ГЏГ Г°Г±ГЁГ­ГЈ: ГЁГ№ГҐГ¬ "Name=" ГЁ ГЁГ§ГўГ«ГҐГЄГ ГҐГ¬ Г§Г­Г Г·ГҐГ­ГЁГҐ
         size_t pos = result.find("Name=");
         if (pos != std::string::npos) {
-            pos += 5; // Пропустить "Name="
+            pos += 5; // ГЏГ°Г®ГЇГіГ±ГІГЁГІГј "Name="
             size_t end = result.find("\n", pos);
             processorName = result.substr(pos, end - pos);
         }
     }
 #else
-    // Для Linux: используйте popen
+    // Г„Г«Гї Linux: ГЁГ±ГЇГ®Г«ГјГ§ГіГ©ГІГҐ popen
     FILE* pipe = popen("grep 'model name' /proc/cpuinfo | head -1 | cut -d: -f2 | tr -d '\\n'", "r");
     if (pipe) {
         char buffer[256];
@@ -67,7 +67,7 @@ std::string getProcessorName() {
     if (processorName.empty()) {
         processorName = "Unknown_CPU";
     }
-    // Очищаем имя
+    // ГЋГ·ГЁГ№Г ГҐГ¬ ГЁГ¬Гї
     return cleanName(processorName);
 }
 
@@ -105,14 +105,14 @@ void runComprehensiveBenchmark(int num_runs, int& importedharmonics) {
     
     // Create output file
 
-    // Получаем имя процессора
+    // ГЏГ®Г«ГіГ·Г ГҐГ¬ ГЁГ¬Гї ГЇГ°Г®Г¶ГҐГ±Г±Г®Г°Г 
     std::string processorName = getProcessorName();
 
-    // Генерируем имя файла
+    // ГѓГҐГ­ГҐГ°ГЁГ°ГіГҐГ¬ ГЁГ¬Гї ГґГ Г©Г«Г 
     std::stringstream filename;
     filename << "benchmark_" << processorName << "_" << maxThreads << "_" << num_runs << ".csv";
 
-    // Открываем файл
+    // ГЋГІГЄГ°Г»ГўГ ГҐГ¬ ГґГ Г©Г«
     std::ofstream file(filename.str());
 
     //std::ofstream file("benchmark_comprehensive.csv");
@@ -128,6 +128,7 @@ void runComprehensiveBenchmark(int num_runs, int& importedharmonics) {
     
     // Iterate through harmonics from 2 to maxHarmonics
     for (int nmax = 5; nmax <= maxHarmonics; nmax += 5) {
+
         std::cout << "\n=== Testing with " << nmax << " harmonics ===\n";
 
         // Import harmonics for current nmax
