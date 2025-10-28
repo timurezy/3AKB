@@ -1,30 +1,34 @@
 
 \begin{table*}[ht]
 \centering
-\caption{Overhead (ms) for Holmes algorithms across different processors and harmonic numbers.}
+\caption{Overhead (ms) for Holmes algorithms across different processors and maximum degree.}
 \label{tab:overhead_metrics}
-\begin{tabular}{c|ccc|ccc}
+\begin{tabular}{c|l|cccccccccccccc}
 \hline
- & \multicolumn{3}{c}{\textbf{n=52}}  & \multicolumn{3}{c}{\textbf{n=357}}  \\
-\cline{2-7}
-{\textbf{Threads}}
-& \textbf{P4T8} & \textbf{P6T12} & \textbf{P8T16} & \textbf{P4T8} & \textbf{P6T12} & \textbf{P8T16} \\
+ &  & \multicolumn{14}{c}{\textbf{Threads}} \\
+\cline{3-16}
+ &  & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} & \textbf{10} & \textbf{12} & \textbf{14} & \textbf{16} & \textbf{18} & \textbf{20} \\
 \hline
-\textbf{2} & 11.654 & 5.048 & 0.833 & 64.791 & 20.000 & 3.946 \\ \hline
-\textbf{3} & 18.734 & 8.234 & 1.607 & 87.120 & 22.628 & 3.871 \\ \hline
-\textbf{4} & 41.535 & 13.250 & 2.214 & 120.463 & 31.583 & 7.067 \\ \hline
-\textbf{5} & 72.125 & 17.175 & 3.395 & 292.721 & 69.450 & 6.748 \\ \hline
-\textbf{6} & 99.319 & 22.906 & 4.081 & 353.721 & 149.122 & 8.286 \\ \hline
-\textbf{7} & 134.931 & 28.947 & 5.657 & 374.628 & 166.862 & 12.157 \\ \hline
-\textbf{8} & 182.452 & 39.691 & 7.839 & 465.593 & 182.219 & 27.260 \\ \hline
-\textbf{9} & - & 49.530 & 8.989 & - & 194.621 & 34.590 \\ \hline
-\textbf{10} & - & 60.431 & 10.963 & - & 215.701 & 40.798 \\ \hline
-\textbf{11} & - & 67.299 & 13.492 & - & 231.494 & 48.112 \\ \hline
-\textbf{12} & - & 84.767 & 16.250 & - & 329.012 & 44.791 \\ \hline
-\textbf{13} & - & - & 17.647 & - & - & 49.938 \\ \hline
-\textbf{14} & - & - & 20.616 & - & - & 51.854 \\ \hline
-\textbf{15} & - & - & 24.032 & - & - & 54.105 \\ \hline
-\textbf{16} & - & - & 27.565 & - & - & 61.113 \\ \hline
+\multirow{4}{*}{\rotatebox{90}{\textbf{n=100}}} & \textbf{P4T8}  & 9.3  & 7.7  & 15.6  & 19.6  & 20.0  & 23.0  & 25.7  & -  & -  & -  & -  & -  & -  & -  \\ 
+ & \textbf{P6T12}  & 2.5  & 3.1  & 3.4  & 4.4  & 5.8  & 5.6  & 6.2  & 6.4  & 7.3  & 7.5  & -  & -  & -  & -  \\ 
+ & \textbf{P8T16}  & 3.8  & 6.2  & 6.8  & 7.9  & 9.4  & 9.9  & 11.1  & 12.4  & 13.9  & 15.4  & 18.8  & 21.4  & -  & -  \\ 
+ & \textbf{P14T20}  & 6.4  & 11.2  & 13.2  & 12.3  & 12.7  & 12.5  & 13.5  & 12.7  & 11.6  & 13.3  & 14.7  & 15.4  & 17.5  & 18.6  \\ 
+\hline
+\multirow{4}{*}{\rotatebox{90}{\textbf{n=360}}} & \textbf{P4T8}  & 34.1  & 33.2  & 49.8  & 61.7  & 59.8  & 57.4  & 60.3  & -  & -  & -  & -  & -  & -  & -  \\ 
+ & \textbf{P6T12}  & 7.0  & 8.3  & 8.3  & 28.4  & 24.4  & 24.4  & 23.1  & 22.8  & 21.6  & 32.5  & -  & -  & -  & -  \\ 
+ & \textbf{P8T16}  & 13.0  & 13.7  & 16.7  & 14.2  & 14.4  & 16.2  & 30.7  & 36.5  & 39.0  & 37.2  & 36.6  & 36.9  & -  & -  \\ 
+ & \textbf{P14T20}  & 27.5  & 31.9  & 29.8  & 35.4  & 30.7  & 42.2  & 48.8  & 56.5  & 66.1  & 73.7  & 77.0  & 76.3  & 74.5  & 69.7  \\ 
+\hline
+\multirow{4}{*}{\rotatebox{90}{\textbf{n=720}}} & \textbf{P4T8}  & 7.0  & 7.5  & 8.9  & 19.4  & 20.6  & 19.5  & 16.8  & -  & -  & -  & -  & -  & -  & -  \\ 
+ & \textbf{P6T12}  & 3.1  & 3.7  & 3.7  & 3.1  & 8.0  & 8.7  & 8.4  & 7.8  & 7.2  & 8.6  & -  & -  & -  & -  \\ 
+ & \textbf{P8T16}  & 2.9  & 3.4  & 4.4  & 4.0  & 4.8  & 4.8  & 8.3  & 12.1  & 12.7  & 11.0  & 9.8  & 9.2  & -  & -  \\ 
+ & \textbf{P14T20}  & 7.2  & 5.6  & 9.1  & 10.4  & 20.7  & 20.1  & 19.9  & 17.8  & 16.0  & 17.8  & 17.7  & 17.6  & 18.5  & 20.4  \\ 
+\hline
+\multirow{4}{*}{\rotatebox{90}{\textbf{n=2000}}} & \textbf{P4T8}  & 49.6  & 49.5  & 38.6  & 217.3  & 153.9  & 131.7  & 114.0  & -  & -  & -  & -  & -  & -  & -  \\ 
+ & \textbf{P6T12}  & 19.6  & 20.6  & 27.2  & 31.4  & 56.7  & 54.0  & 55.8  & 51.0  & 45.5  & 42.8  & -  & -  & -  & -  \\ 
+ & \textbf{P8T16}  & 28.4  & 30.9  & 35.0  & 35.6  & 35.3  & 30.7  & 93.3  & 110.4  & 106.9  & 93.3  & 82.2  & 74.1  & -  & -  \\ 
+ & \textbf{P14T20}  & 57.4  & 69.7  & 109.1  & 77.8  & 46.8  & 141.0  & 75.6  & 133.5  & 99.4  & 140.3  & 160.1  & 141.2  & 172.1  & 170.2  \\ 
+\hline
 
 \end{tabular}
 \end{table*}

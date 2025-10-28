@@ -1,30 +1,34 @@
 
 \begin{table*}[ht]
 \centering
-\caption{Efficiency for Holmes algorithms across different processors and harmonic numbers.}
+\caption{Efficiency (in percent) for Holmes algorithms across different processors and maximum degree.}
 \label{tab:efficiency_metrics}
-\begin{tabular}{c|ccc|ccc}
+\begin{tabular}{c|l|cccccccccccccc}
 \hline
- & \multicolumn{3}{c}{\textbf{n=52}}  & \multicolumn{3}{c}{\textbf{n=357}}  \\
-\cline{2-7}
-{\textbf{Threads}}
-& \textbf{P4T8} & \textbf{P6T12} & \textbf{P8T16} & \textbf{P4T8} & \textbf{P6T12} & \textbf{P8T16} \\
+ &  & \multicolumn{14}{c}{\textbf{Threads}} \\
+\cline{3-16}
+ &  & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} & \textbf{10} & \textbf{12} & \textbf{14} & \textbf{16} & \textbf{18} & \textbf{20} \\
 \hline
-\textbf{2} & 0.382 & 0.547 & 0.532 & 0.830 & 0.932 & 0.909 \\ \hline
-\textbf{3} & 0.278 & 0.425 & 0.371 & 0.784 & 0.924 & 0.910 \\ \hline
-\textbf{4} & 0.148 & 0.315 & 0.299 & 0.724 & 0.897 & 0.847 \\ \hline
-\textbf{5} & 0.091 & 0.262 & 0.218 & 0.519 & 0.799 & 0.853 \\ \hline
-\textbf{6} & 0.068 & 0.210 & 0.188 & 0.472 & 0.649 & 0.825 \\ \hline
-\textbf{7} & 0.051 & 0.174 & 0.143 & 0.458 & 0.623 & 0.763 \\ \hline
-\textbf{8} & 0.038 & 0.133 & 0.108 & 0.404 & 0.602 & 0.590 \\ \hline
-\textbf{9} & - & 0.110 & 0.095 & - & 0.586 & 0.531 \\ \hline
-\textbf{10} & - & 0.092 & 0.079 & - & 0.561 & 0.490 \\ \hline
-\textbf{11} & - & 0.083 & 0.066 & - & 0.543 & 0.449 \\ \hline
-\textbf{12} & - & 0.067 & 0.055 & - & 0.455 & 0.467 \\ \hline
-\textbf{13} & - & - & 0.051 & - & - & 0.440 \\ \hline
-\textbf{14} & - & - & 0.044 & - & - & 0.430 \\ \hline
-\textbf{15} & - & - & 0.038 & - & - & 0.420 \\ \hline
-\textbf{16} & - & - & 0.033 & - & - & 0.391 \\ \hline
+\multirow{4}{*}{\rotatebox{90}{\textbf{n=100}}} & \textbf{P4T8}  & 59  & 53  & 30  & 21  & 18  & 14  & 11  & -  & -  & -  & -  & -  & -  & -  \\ 
+ & \textbf{P6T12}  & 81  & 70  & 62  & 50  & 39  & 36  & 31  & 27  & 23  & 19  & -  & -  & -  & -  \\ 
+ & \textbf{P8T16}  & 80  & 62  & 53  & 43  & 35  & 30  & 25  & 21  & 18  & 14  & 10  & 8  & -  & -  \\ 
+ & \textbf{P14T20}  & 69  & 46  & 35  & 32  & 27  & 25  & 21  & 20  & 20  & 15  & 12  & 10  & 8  & 7  \\ 
+\hline
+\multirow{4}{*}{\rotatebox{90}{\textbf{n=360}}} & \textbf{P4T8}  & 81  & 75  & 60  & 49  & 46  & 43  & 38  & -  & -  & -  & -  & -  & -  & -  \\ 
+ & \textbf{P6T12}  & 95  & 91  & 89  & 66  & 65  & 62  & 60  & 57  & 56  & 41  & -  & -  & -  & -  \\ 
+ & \textbf{P8T16}  & 93  & 90  & 85  & 84  & 81  & 77  & 60  & 53  & 49  & 46  & 42  & 39  & -  & -  \\ 
+ & \textbf{P14T20}  & 87  & 79  & 76  & 68  & 67  & 56  & 49  & 42  & 36  & 30  & 26  & 23  & 22  & 21  \\ 
+\hline
+\multirow{4}{*}{\rotatebox{90}{\textbf{n=720}}} & \textbf{P4T8}  & 89  & 84  & 77  & 56  & 50  & 47  & 48  & -  & -  & -  & -  & -  & -  & -  \\ 
+ & \textbf{P6T12}  & 94  & 90  & 88  & 87  & 69  & 64  & 61  & 61  & 60  & 51  & -  & -  & -  & -  \\ 
+ & \textbf{P8T16}  & 96  & 93  & 89  & 88  & 84  & 82  & 69  & 58  & 55  & 54  & 53  & 51  & -  & -  \\ 
+ & \textbf{P14T20}  & 91  & 89  & 80  & 74  & 54  & 51  & 48  & 47  & 48  & 40  & 37  & 34  & 30  & 26  \\ 
+\hline
+\multirow{4}{*}{\rotatebox{90}{\textbf{n=2000}}} & \textbf{P4T8}  & 91  & 87  & 87  & 49  & 53  & 53  & 53  & -  & -  & -  & -  & -  & -  & -  \\ 
+ & \textbf{P6T12}  & 96  & 94  & 90  & 86  & 74  & 72  & 69  & 68  & 68  & 66  & -  & -  & -  & -  \\ 
+ & \textbf{P8T16}  & 95  & 93  & 90  & 87  & 86  & 85  & 63  & 56  & 54  & 53  & 53  & 52  & -  & -  \\ 
+ & \textbf{P14T20}  & 92  & 86  & 75  & 77  & 82  & 57  & 68  & 52  & 57  & 44  & 37  & 37  & 30  & 28  \\ 
+\hline
 
 \end{tabular}
 \end{table*}
