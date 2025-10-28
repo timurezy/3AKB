@@ -13,7 +13,15 @@
 #include <vector>
 #include <string>
 
-
+/*
+*@brief Преобразование декартовых(экваториальная и полярная компоненты)
+* координат в геодезические(широта и высота) по методу Борковского(1989).
+* Соответствует SUBROUTINE GEOD(SITE_CORR.FOR.TXT).
+* *@param equatorial_radius_r Экваториальная компонента(sqrt(X ^ 2 + Y ^ 2))[m]
+* @param z_polar Полярная компонента Z[m]
+* @param geodetic_latitude_fi Геодезическая широта[rad](Выходной параметр)
+* @param geodetic_height_h Геодезическая высота[m](Выходной параметр)
+*/
 std::string cleanName(std::string name) {
     // Заменяем пробелы на '_'
     std::replace(name.begin(), name.end(), ' ', '_');
@@ -127,14 +135,14 @@ void runComprehensiveBenchmark(int num_runs, int& importedharmonics) {
     std::cout << "\nStarting benchmark...\n";
     
     // Iterate through harmonics from 2 to maxHarmonics
-    for (int nmax = 2; nmax <= maxHarmonics; nmax+=5) {
+    for (int nmax = 5; nmax <= maxHarmonics; nmax+=5) {
         std::cout << "\n=== Testing with " << nmax << " harmonics ===\n";
         
         // Import harmonics for current nmax
-        if (importedharmonics != nmax) {
+        if (importedharmonics < maxHarmonics) {
             freeStokes(importedharmonics);
-            importStokesCombined(gravityModels[selectedModel], nmax);
-            importedharmonics = nmax;
+            importStokesCombined(gravityModels[selectedModel], maxHarmonics);
+            importedharmonics = maxHarmonics;
             std::cout << "Harmonics imported.\n";
         }
         
