@@ -1,4 +1,4 @@
-﻿
+
 #pragma once
 
 #include <vector>
@@ -226,7 +226,7 @@
 
 
 		d2x = (double)0.5 * ((-CC[m] * V[m + 1] - SS[m] * W[m + 1]) * NF1 + (n - m + 2) * (n - m + 1) * (+CC[m] * V[m - 1] + SS[m] * W[m - 1]) * NF2) + d2x;
-		d2y = (double)0.5 * ((-CC[m] * W[m + 1] + SS[m] * V[m + 1]) * NF1 + (n - m + 2) * (n - m + 1) * (-CC[m] * V[m - 1] + SS[m] * V[m - 1]) * NF2) + d2y;
+		d2y = (double)0.5 * ((-CC[m] * W[m + 1] + SS[m] * V[m + 1]) * NF1 + (n - m + 2) * (n - m + 1) * (-CC[m] * W[m - 1] + SS[m] * V[m - 1]) * NF2) + d2y;
 		d2z = (double)(n - m + 1) * (-CC[m] * V[m] - SS[m] * W[m]) * NF3 + d2z;
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -272,7 +272,7 @@
 			NF3 = sqrt((double)(2 * n + 1) * (n + m + 1) / (2 * n + 3) / (n - m + 1));
 
 			d2x = (double)0.5 * ((-CC[m] * V[m + 1] - SS[m] * W[m + 1]) * NF1 + (n - m + 2) * (n - m + 1) * (+CC[m] * V[m - 1] + SS[m] * W[m - 1]) * NF2) + d2x;
-			d2y = (double)0.5 * ((-CC[m] * W[m + 1] + SS[m] * V[m + 1]) * NF1 + (n - m + 2) * (n - m + 1) * (-CC[m] * V[m - 1] + SS[m] * V[m - 1]) * NF2) + d2y;
+			d2y = (double)0.5 * ((-CC[m] * W[m + 1] + SS[m] * V[m + 1]) * NF1 + (n - m + 2) * (n - m + 1) * (-CC[m] * W[m - 1] + SS[m] * V[m - 1]) * NF2) + d2y;
 			d2z = (double)(n - m + 1) * (-CC[m] * V[m] - SS[m] * W[m]) * NF3 + d2z;
 
 
@@ -284,7 +284,7 @@
 				NF3 = sqrt((double)(2 * n + 1) * (n + m + 1) / (2 * n + 3) / (n - m + 1));
 
 				d2x = d2x + 0.5 * ((-CC[m] * V[m + 1] - SS[m] * W[m + 1]) * NF1 + (n - m + 2) * (n - m + 1) * (+CC[m] * V[m - 1] + SS[m] * W[m - 1]) * NF2);
-				d2y = d2y + 0.5 * ((-CC[m] * W[m + 1] + SS[m] * V[m + 1]) * NF1 + (n - m + 2) * (n - m + 1) * (-CC[m] * V[m - 1] + SS[m] * V[m - 1]) * NF2);
+				d2y = d2y + 0.5 * ((-CC[m] * W[m + 1] + SS[m] * V[m + 1]) * NF1 + (n - m + 2) * (n - m + 1) * (-CC[m] * W[m - 1] + SS[m] * V[m - 1]) * NF2);
 				d2z = d2z + (n - m + 1) * (-CC[m] * V[m] - SS[m] * W[m]) * NF3;
 
 
