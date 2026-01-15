@@ -21,8 +21,8 @@
 
 
 std::map<int, std::string> gravityModels = {
-	{1, "EGM96.dat"},
-	{2, "egm2008.dat"}
+	{1, "../EGM96.dat"},
+	{2, "../EGM08.dat"}
 };
 
 int selectedModel = 1; 
@@ -132,13 +132,13 @@ void importStokesCombined(const std::string& path, int nmax) {
         int idx = order2(n, m);
         double norm = PfBel(n, m);
 
-        // Запись в Belikov Cunningham
+        // Г‡Г ГЇГЁГ±Гј Гў Belikov Cunningham
         Cnm[idx] = C * norm;
         Snm[idx] = S * norm;
         Cnm1[idx] = C;
         Snm1[idx] = S;
      
-        // Запись в _c/_s (gravity_stokes)
+        // Г‡Г ГЇГЁГ±Гј Гў _c/_s (gravity_stokes)
         if (m <= n) {
             _c[n][m] = C;
             _s[n][m] = S;
@@ -226,6 +226,16 @@ std::array<double, 3> random_velocity(double radius) {
     return v;
 }
 
+std::array<double, 3> orbit_velocity(double radius, double latitude, double longitude) {
+    double speed = first_speed(radius);
+
+    std::array<double, 3> v;
+    v[0] = -1.0 * speed * sin(longitude * M_PI / 180.0);
+    v[1] = speed * cos(longitude * M_PI / 180.0);
+    v[2] = 0.0;
+
+    return v;
+}
 
 
 std::array<double, 3> XYZtoRLatLon(double x, double y, double z) {
