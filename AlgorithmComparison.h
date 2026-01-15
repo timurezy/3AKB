@@ -184,9 +184,13 @@ void runSequentialDataComparison(double radius, double latitude, double longitud
     }
 
     file << "Algorithm,Run,Time (ms),R,Latitude,Longitude,ax,ay,az\n";
+    file << std::setprecision(17);
 
     std::array<double, 3> xyz = RLatLonToXYZ(radius, latitude, longitude);
-    std::array<double, 3> v = random_velocity(radius);
+    // std::array<double, 3> v = random_velocity(radius);
+    std::array<double, 3> v = orbit_velocity(radius, latitude, longitude);
+
+    std::cout << v[0] << '\t' << v[1] << '\t' << v[2] << std::endl;
 
     std::array<double, 3> sphericalB = {0,0,0};
     std::array<double, 3> sphericalC = {0,0,0};
@@ -208,7 +212,7 @@ void runSequentialDataComparison(double radius, double latitude, double longitud
     double latitudeB = latitude, latitudeC = latitude, latitudeH1 = latitude, latitudeHm = latitude;
     double longitudeB = longitude, longitudeC = longitude, longitudeH1 = longitude, longitudeHm = longitude;
 
-    double deltat = 0.001;
+    double deltat = 1.0;
 
     std::cout << "Algorithm is running...\n";
 
@@ -227,12 +231,13 @@ void runSequentialDataComparison(double radius, double latitude, double longitud
              << ResultBelikov[0] << "," << ResultBelikov[1] << "," << ResultBelikov[2] << "\n";
 
         // Integration
-        xB += vxB * deltat + 0.5 * ResultBelikov[0] * deltat * deltat;
-        yB += vyB * deltat + 0.5 * ResultBelikov[1] * deltat * deltat;
-        zB += vzB * deltat + 0.5 * ResultBelikov[2] * deltat * deltat;
         vxB += ResultBelikov[0] * deltat;
         vyB += ResultBelikov[1] * deltat;
         vzB += ResultBelikov[2] * deltat;
+        xB += vxB * deltat;// + 0.5 * ResultBelikov[0] * deltat * deltat;
+        yB += vyB * deltat;// + 0.5 * ResultBelikov[1] * deltat * deltat;
+        zB += vzB * deltat;// + 0.5 * ResultBelikov[2] * deltat * deltat;
+
         sphericalB = XYZtoRLatLon(xB, yB, zB);
         radiusB = sphericalB[0];
         latitudeB = sphericalB[1];
@@ -251,12 +256,12 @@ void runSequentialDataComparison(double radius, double latitude, double longitud
              << radiusC << "," << latitudeC << "," << longitudeC << ","
              << ResultCunningham[0] << "," << ResultCunningham[1] << "," << ResultCunningham[2] << "\n";
 
-        xC += vxC * deltat + 0.5 * ResultCunningham[0] * deltat * deltat;
-        yC += vyC * deltat + 0.5 * ResultCunningham[1] * deltat * deltat;
-        zC += vzC * deltat + 0.5 * ResultCunningham[2] * deltat * deltat;
         vxC += ResultCunningham[0] * deltat;
         vyC += ResultCunningham[1] * deltat;
         vzC += ResultCunningham[2] * deltat;
+        xC += vxC * deltat; // + 0.5 * ResultCunningham[0] * deltat * deltat;
+        yC += vyC * deltat; // + 0.5 * ResultCunningham[1] * deltat * deltat;
+        zC += vzC * deltat; // + 0.5 * ResultCunningham[2] * deltat * deltat;
         sphericalC = XYZtoRLatLon(xC, yC, zC);
         radiusC = sphericalC[0];
         latitudeC = sphericalC[1];
@@ -279,12 +284,12 @@ void runSequentialDataComparison(double radius, double latitude, double longitud
              << radiusH1 << "," << latitudeH1 << "," << longitudeH1 << ","
              << ResultStokesONE[0] << "," << ResultStokesONE[1] << "," << ResultStokesONE[2] << "\n";
 
-        xH1 += vxH1 * deltat + 0.5 * ResultStokesONE[0] * deltat * deltat;
-        yH1 += vyH1 * deltat + 0.5 * ResultStokesONE[1] * deltat * deltat;
-        zH1 += vzH1 * deltat + 0.5 * ResultStokesONE[2] * deltat * deltat;
         vxH1 += ResultStokesONE[0] * deltat;
         vyH1 += ResultStokesONE[1] * deltat;
         vzH1 += ResultStokesONE[2] * deltat;
+        xH1 += vxH1 * deltat;
+        yH1 += vyH1 * deltat;
+        zH1 += vzH1 * deltat;
         sphericalH1 = XYZtoRLatLon(xH1, yH1, zH1);
         radiusH1 = sphericalH1[0];
         latitudeH1 = sphericalH1[1];
@@ -305,12 +310,12 @@ void runSequentialDataComparison(double radius, double latitude, double longitud
              << radiusHm << "," << latitudeHm << "," << longitudeHm << ","
              << ResultStokesMULTI[0] << "," << ResultStokesMULTI[1] << "," << ResultStokesMULTI[2] << "\n";
 
-        xHm += vxHm * deltat + 0.5 * ResultStokesMULTI[0] * deltat * deltat;
-        yHm += vyHm * deltat + 0.5 * ResultStokesMULTI[1] * deltat * deltat;
-        zHm += vzHm * deltat + 0.5 * ResultStokesMULTI[2] * deltat * deltat;
         vxHm += ResultStokesMULTI[0] * deltat;
         vyHm += ResultStokesMULTI[1] * deltat;
         vzHm += ResultStokesMULTI[2] * deltat;
+        xHm += vxHm * deltat;
+        yHm += vyHm * deltat;
+        zHm += vzHm * deltat;
         sphericalHm = XYZtoRLatLon(xHm, yHm, zHm);
         radiusHm = sphericalHm[0];
         latitudeHm = sphericalHm[1];
