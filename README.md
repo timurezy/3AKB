@@ -1,109 +1,45 @@
-# 3AKB
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![C++20](https://img.shields.io/badge/C++-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
 
-3AKB is a C++ console application for computing Earth gravitational acceleration from spherical harmonic gravity models and evaluating multiple gravity-field algorithms under identical conditions.
+# 3AKB 🌍 — Three Algorithms for Gravitational Acceleration Benchmarking
 
-The project provides an interactive environment to:
+**3AKB** is a lightweight, header-only C++20 console application for computing Earth's gravitational acceleration using high-degree spherical harmonic models (EGM96 and EGM2008).
 
-- select a gravity model (EGM96 / EGM2008)
-- import harmonic coefficients up to a chosen maximum degree/order
-- compute acceleration at a single point
-- compare algorithms (random points or sequential propagation)
-- benchmark runtime and multithread scaling
-- export results to CSV for research workflows
+It provides a unified framework to evaluate and benchmark three classical recursive algorithms — Belikov, Cunningham, and Holmes (Stokes) — under identical conditions, including a **multi-threaded parallel implementation** ⚡ of the Holmes algorithm described in our forthcoming paper.
 
----
+**Key features**
+- 🚀 Interactive console menu for quick experiments
+- 📍 Single-point evaluation
+- 🔄 Random-point and sequential orbit propagation comparison modes
+- 📊 Comprehensive multithreaded benchmarking with speedup/efficiency metrics
+- 📄 CSV export for post-processing and research workflows
+- ✅ No external dependencies
 
-Quickstart  
-Installation  
-Project structure  
-Usage  
-Input parameters  
-Output format  
-Algorithms / API reference  
-Modes (Individual / Comparison / Benchmarking)  
-Authors  
-If you use this code in your research, please cite  
-License  
-Keywords  
+## Table of Contents
+- [Quickstart 🚀](#quickstart)
+- [Installation 🛠️](#installation)
+- [Project structure 📂](#project-structure)
+- [Usage 🎮](#usage)
+- [Input parameters ⚙️](#input-parameters)
+- [Output format 📈](#output-format)
+- [Algorithms / API reference 🔧](#algorithms--api-reference)
+- [Modes 🧪](#modes)
+- [Authors 👥](#authors)
+- [Citation 📚](#citation)
+- [License 📄](#license)
 
-C++17, geopotential, spherical harmonics, gravity acceleration, EGM96, EGM2008, multithreading, benchmarking.
+## Quickstart 🚀
 
----
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/timurezy/3AKB.git
+   cd 3AKB
+   ```
+2. Open the Visual Studio solution `3AKB.sln`.
+3. Build in **Release** configuration (x64 recommended).
+4. Run the executable.
 
-## 1. Quickstart
-
-1. Open the Visual Studio solution:
-
-```
-3AKB.sln
-```
-
-2. Build in **Release** mode  
-3. Run the executable
-
-You will see an interactive console menu where you can configure parameters and run different modes.
-
----
-
-## 2. Installation
-
-### Requirements
-
-- Windows
-- Visual Studio 2019 / 2022
-- C++17 toolset (MSVC)
-
-### Build
-
-Open `3AKB.sln` → Build → Run
-
-No external libraries are required.
-
----
-
-## 3. Project structure
-
-Core files:
-
-- `3AKB.cpp`  
-  Program entry point (`main`) and interactive main menu
-
-- `alltypes.h`  
-  Shared constants and global storage:
-  - Earth constants (`EARTH_RADIUS`, `EARTH_MU`)
-  - gravity model selection
-  - harmonic storage arrays
-  - import/free helpers
-
-- `SingleAlgorithmExecution.h`  
-  Individual algorithm execution mode
-
-- `AlgorithmComparison.h`  
-  Algorithm comparison mode + CSV export
-
-- `AlgorithmBenchmarking.h`  
-  Benchmarking mode
-
-- `Simulate.h`  
-  Coordinate conversions, propagation helpers, random coordinate generation
-
-Algorithm implementations:
-
-- `Belikov.h` → Belikov harmonic summation
-- `Cunningham.h` → Cunningham method
-- `Albert.h` → Stokes/Holmes implementation (single + multithread)
-
-Data files:
-
-- `EGM96.dat`
-- `EGM2008.dat`
-
----
-
-## 4. Usage
-
-At runtime the program shows:
-
+You will be greeted by an interactive menu:
 ```
 1. RUN INDIVIDUAL ALGORITHM
 2. ALGORITHM COMPARISON MODE
@@ -116,191 +52,119 @@ At runtime the program shows:
 0. EXIT
 ```
 
-Notes:
+**Example**: select EGM2008, set NMAX = 2000, 12 threads → run benchmarking → get detailed CSV with speedup up to ~8.4× ⚡
 
-- `NMAX = 0` → Keplerian (central-body) mode
-- `NMAX > 0` → spherical harmonics must be imported
+## Installation 🛠️
 
----
+### Requirements
+- Windows 10/11
+- Visual Studio 2019 or 2022 (with C++20 support)
+- MSVC toolset
 
-## 5. Input parameters
+### Build
+Open `3AKB.sln` → Build → Build Solution.  
+No external libraries or package managers are required.
 
-### Gravity model
-- EGM96
-- EGM2008
+## Project structure 📂
 
-### Harmonics
-- `NMAX` = maximum degree/order
-- `NMAX = 0` → Keplerian only
+**Core files**
+- `3AKB.cpp` – program entry point and interactive menu
+- `alltypes.h` – shared constants, gravity model selection, harmonic storage
+- `SingleAlgorithmExecution.h` – single-point evaluation
+- `AlgorithmComparison.h` – comparison mode + CSV export
+- `AlgorithmBenchmarking.h` – multithreaded benchmarking
+- `Simulate.h` – coordinate utilities and random point generation
 
-### Coordinates
-- radius (meters)
-- latitude (degrees)
-- longitude (degrees)
+**Algorithm implementations**
+- `Belikov.h` – Belikov method
+- `Cunningham.h` – Cunningham method
+- `Albert.h` – single- and multi-threaded Holmes (Stokes) implementation
 
-### Threads
-- affects multithread Stokes solver only
-- `threads >= 1`
+**Data**
+- `EGM96.dat`, `EGM2008.dat` – harmonic coefficient files
 
-### Number of runs
-Used in comparison and benchmarking modes.
+## Usage 🎮
 
----
+The program starts with an interactive console menu (see Quickstart).  
+Note:
+- `NMAX = 0` → central-body (Keplerian) acceleration only
+- `NMAX > 0` → harmonic coefficients must be imported first
 
-## 6. Output format
+## Input parameters ⚙️
 
-The program writes CSV files.
+- **Gravity model**: EGM96 or EGM2008
+- **Maximum degree/order (NMAX)**: 0 (Keplerian) to full model resolution
+- **Point coordinates**: radius (m), geocentric latitude (°), longitude (°)
+- **Number of threads**: 1–maximum supported by hardware (affects parallel Holmes only)
+- **Number of runs**: used in comparison and benchmarking modes
 
-### Random comparison
+## Output format 📈
 
-File:
+All results are exported as CSV files in the executable directory.
 
-```
-results_RANDOM.csv
-```
+**Random comparison** – `results_RANDOM.csv`  
+Header: `Algorithm,Run,Time (ms),R,Latitude,Longitude,ax,ay,az`  
+Includes summary statistics (total time, speedup, efficiency).
 
-Header:
+**Sequential propagation** – `results_SEQUENTIAL.csv`  
+Similar format + final propagated position.
 
-```
-Algorithm,Run,Time (ms),R,Latitude,Longitude,ax,ay,az
-```
+**Benchmarking** – multiple CSV files with detailed timing, speedup, and efficiency metrics.
 
-Includes summary:
-
-- total time per algorithm
-- speedup
-- efficiency
-- final accelerations
-
----
-
-### Sequential comparison
-
-File:
-
-```
-results_SEQUENTIAL.csv
-```
-
-Same header + summary:
-
-- total time
-- speedup / efficiency
-- final propagated coordinates
-
----
-
-### Benchmarking mode
-
-Creates benchmark CSV files containing:
-
-- algorithm
-- threads
-- NMAX
-- timing statistics
-- speedup / efficiency
-
----
-
-## 7. Algorithms / API reference
+## Algorithms / API reference 🔧
 
 ### Belikov
-
+```cpp
+void gravityBelikov(double r, double lat, double lon, int nmax,
+                    std::array<double,3>& result);
 ```
-void gravityBelikov(double r, double lat, double lon, int nmax, std::array<double,3>& result)
-```
-
-Computes Cartesian acceleration using Belikov harmonic expansion.
-
-Requires imported harmonics.
-
----
 
 ### Cunningham
-
-```
-void gravityCunningham(double r, double lat, double lon, int nmax, std::array<double,3>& result)
-```
-
-Uses normalized Legendre recursion and Cunningham summation.
-
-Requires imported harmonics.
-
----
-
-### Stokes / Holmes (Albert implementation)
-
-Class:
-
-```
-uniorb::gravity_stokes
+```cpp
+void gravityCunningham(double r, double lat, double lon, int nmax,
+                       std::array<double,3>& result);
 ```
 
-Key methods:
-
+### Holmes / Stokes (parallel-capable) ⚡
+```cpp
+namespace uniorb {
+class gravity_stokes {
+public:
+    void use_concurrency(int thread_count);
+    void get_acceleration(double r, double lat, double lon,
+                          int nmax, std::array<double,3>& result);
+};
+}
 ```
-use_concurrency(thread_count)
-get_acceleration(...)
-```
 
-Supports automatic multithread splitting of harmonic intervals.
+## Modes 🧪
 
----
+- **Individual algorithm**: single-point evaluation of selected method
+- **Comparison**: random points or simple sequential propagation, with CSV export
+- **Benchmarking**: systematic performance tests across degrees and thread counts
 
-## 8. Modes
+## Authors 👥
 
-### Individual algorithm mode
-
-Runs selected solver at current coordinates.
-
-### Comparison mode
-
-Two sub-modes:
-
-1. Random coordinates
-2. Sequential propagation
-
-Exports CSV with timings and acceleration vectors.
-
-### Benchmarking mode
-
-Runs repeated experiments for performance studies.
-
----
-
-## 9. Authors
-
-A. V. Fraerman  
-T. S. Pavlov  
-A. R. Shaykhutdinov  
-P. R. Zapevalin  
-
-Astro Space Center, Lebedev Physical Institute, RAS  
-Sternberg Astronomical Institute, Moscow State University  
+A. V. Fraerman¹, T. S. Pavlov¹, A. R. Shaykhutdinov¹, P. R. Zapevalin²  
+¹ Astro Space Center, Lebedev Physical Institute, Russian Academy of Sciences  
+² Sternberg Astronomical Institute, Lomonosov Moscow State University  
 
 Corresponding author: fraerman@asc.rssi.ru
 
----
+## Citation 📚
 
-## 10. If you use this code in your research, please cite:
+If you use this code in your research, please cite our paper (to be updated upon acceptance):
 
-(Add paper reference here)
+```bibtex
+@article{Fraerman2026,
+  title = {Multi-threaded parallel implementation of Holmes' algorithm for high-degree spherical harmonic evaluation of Earth's gravitational field},
+  author = {Fraerman, A. V. and Pavlov, T. S. and Shaykhutdinov, A. R. and Zapevalin, P. R.},
+  journal = {Advances in Space Research},
+  year = {2026},
+  doi = {...}
+}
+```
 
----
+## License 📄
 
-## 11. License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-## 12. Keywords
-
-Earth gravity field  
-spherical harmonics  
-EGM96  
-EGM2008  
-orbital mechanics  
-multithreading  
-benchmarking  
-C++17
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
